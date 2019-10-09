@@ -1,4 +1,7 @@
-package parts.lost.calcsystem.types;
+package parts.lost.calcsystem.tree;
+
+import parts.lost.calcsystem.types.Number;
+import parts.lost.calcsystem.types.Operation;
 
 public class Tree extends Node {
 

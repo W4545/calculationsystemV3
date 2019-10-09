@@ -31,4 +31,9 @@ public final class Number implements TreeType {
     public double getDouble() {
         return value;
     }
+
+    public Number negate() {
+        value = -value;
+        return this;
+    }
 }

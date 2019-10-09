@@ -12,12 +12,23 @@ public enum Priority {
      */
     ONE,
     TWO,
+    /**
+     * Reserved for operators that execute on the same level as addition and subtraction
+     */
     THREE,
     FOUR,
+
+    /**
+     * Reserved for operators that execute on the same level as multiplication and subtraction
+     */
     FIVE,
     SIX,
     SEVEN,
     EIGHT,
+
+    /**
+     * Reserved for unary operators that execute on the same level as negation
+     */
     NINE,
     TEN
 }

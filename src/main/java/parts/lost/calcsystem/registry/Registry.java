@@ -4,12 +4,15 @@ package parts.lost.calcsystem.registry;
 // Date: 10/8/2019
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * @version 0.5.0
  */
-public class Registry {
+public class Registry implements Iterable<Item> {
 
     private Set<OperatorItem> operators;
     private Set<GeneratorItem> generators;
@@ -78,5 +81,51 @@ public class Registry {
     public boolean contains(Item item) {
         return operators.contains(item) || generators.contains(item) ||
                 constants.contains(item) || unaryOperators.contains(item);
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            private Iterator<? extends Item> constantIterator = constants.iterator();
+            private Iterator<? extends Item> operatorIterator = operators.iterator();
+            private Iterator<? extends Item> generatorIterator = generators.iterator();
+            private byte current = 0;
+
+            @Override
+            public boolean hasNext() {
+                if (operatorIterator.hasNext()) {
+                    current = 0;
+                    return true;
+                } else if (generatorIterator.hasNext()) {
+                    current = 1;
+                    return true;
+                } else if (constantIterator.hasNext()) {
+                    current = 3;
+                    return true;
+                } else
+                    return false;
+
+            }
+
+            @Override
+            public Item next() {
+                if (current == 0)
+                    return operatorIterator.next();
+                else if (current == 1)
+                    return generatorIterator.next();
+                else
+                    return constantIterator.next();
+            }
+        };
+    }
+
+    @Override
+    public void forEach(Consumer<? super Item> action) {
+
+    }
+
+    @Override
+    public Spliterator<Item> spliterator() {
+        return null;
     }
 }

@@ -3,15 +3,15 @@ package parts.lost.calcsystem;
 // Name: Jack Young
 // Date: 10/8/2019
 
-import parts.lost.calcsystem.tree.Node;
 import parts.lost.calcsystem.types.Number;
+import parts.lost.calcsystem.types.TreeType;
 
 public class Calculation {
 
-    private Node tree;
+    private TreeType tree;
     private String representation;
 
-    Calculation(String representation, Node tree) {
+    Calculation(String representation, TreeType tree) {
         this.representation = representation;
         this.tree = tree;
     }
@@ -21,6 +21,6 @@ public class Calculation {
     }
 
     public Number solve() {
-        return tree.resolve();
+        return tree.value();
     }
 }

@@ -19,4 +19,13 @@ public class OperatorItem extends Item {
     public Operation getOperation() {
         return operation;
     }
+
+    @Override
+    public String toString() {
+        return "OperatorItem{" +
+
+                "identifier='" + identifier + '\'' +
+                ", priority=" + priority +
+                '}';
+    }
 }

@@ -36,4 +36,9 @@ public final class Number implements TreeType {
         value = -value;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return Double.toString(value);
+    }
 }

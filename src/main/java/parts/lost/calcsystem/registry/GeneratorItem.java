@@ -9,8 +9,9 @@ import parts.lost.calcsystem.types.GenOperation;
 public class GeneratorItem extends Item {
 
     private GenOperation operation;
+    private int argumentCount;
 
-    public GeneratorItem(String identifier, Priority priority, GenOperation operation) {
+    public GeneratorItem(String identifier, Priority priority, int argumentCount, GenOperation operation) {
         this.identifier = identifier;
         this.priority = priority;
         this.operation = operation;
@@ -18,5 +19,18 @@ public class GeneratorItem extends Item {
 
     public GenOperation getOperation() {
         return operation;
+    }
+
+    public int getArgumentCount() {
+        return argumentCount;
+    }
+
+    @Override
+    public String toString() {
+        return "GeneratorItem{" +
+                "argumentCount=" + argumentCount +
+                ", identifier='" + identifier + '\'' +
+                ", priority=" + priority +
+                '}';
     }
 }

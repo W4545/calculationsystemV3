@@ -12,7 +12,7 @@ public class Operator implements TreeType {
     }
 
     @Override
-    public Number value() {
+    public Value value() {
         return operation.operation(left.value(), right.value());
     }
 

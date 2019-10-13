@@ -1,30 +1,28 @@
 package parts.lost.calcsystem.types;
 
-import parts.lost.calcsystem.Priority;
-
 /**
  *
  * @version 1.0.0
  * @since 0.0
  */
-public final class Number implements TreeType {
+public final class Value implements TreeType {
 
     private double value;
 
-    public Number(double value) {
+    public Value(double value) {
         this.value = value;
     }
 
-    public Number(int value) {
+    public Value(int value) {
         this.value = value;
     }
 
-    public Number() {
+    public Value() {
         this.value = 0;
     }
 
     @Override
-    public Number value() {
+    public Value value() {
         return this;
     }
 
@@ -32,7 +30,7 @@ public final class Number implements TreeType {
         return value;
     }
 
-    public Number negate() {
+    public Value negate() {
         value = -value;
         return this;
     }

@@ -11,8 +11,8 @@ public class Generator implements TreeType {
     }
 
     @Override
-    public Number value() {
-        Number[] resolvedArray = new Number[array.length];
+    public Value value() {
+        Value[] resolvedArray = new Value[array.length];
 
         for (int i = 0; i < array.length; i++)
             resolvedArray[i] = array[i].value();

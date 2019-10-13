@@ -2,7 +2,7 @@ package parts.lost.calcsystem;
 
 import parts.lost.calcsystem.registry.GeneratorItem;
 import parts.lost.calcsystem.registry.OperatorItem;
-import parts.lost.calcsystem.types.Number;
+import parts.lost.calcsystem.types.Value;
 
 class Flag {
 
@@ -13,7 +13,7 @@ class Flag {
     }
 
     public boolean isNumber() {
-        return object instanceof Number;
+        return object instanceof Value;
     }
 
     public boolean isOperator() {

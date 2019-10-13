@@ -4,7 +4,7 @@ package parts.lost.calcsystem;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.registry.*;
-import parts.lost.calcsystem.types.Number;
+import parts.lost.calcsystem.types.Value;
 import parts.lost.calcsystem.types.Operator;
 import parts.lost.calcsystem.types.TreeType;
 
@@ -56,7 +56,7 @@ public class Calculate {
             String string = strings.get(i);
             try {
                 double value = Double.parseDouble(string);
-                array[i] = new Flag(new Number(value));
+                array[i] = new Flag(new Value(value));
             } catch (NumberFormatException | NullPointerException ex) {
                 if (string.equals("(") || string.equals(")")) {
                     array[i] = new Flag(string);
@@ -107,7 +107,7 @@ public class Calculate {
         Stack<TreeType> stack = new Stack<>();
         for (Flag flag : postFix) {
             if (flag.isNumber()) {
-                stack.push(((Number) flag.getObject()));
+                stack.push(((Value) flag.getObject()));
             } else if (flag.isOperator()) {
                 TreeType right = stack.pop();
                 TreeType left = stack.pop();
@@ -137,7 +137,7 @@ public class Calculate {
 
     public static void main(String[] args) {
         Calculate calculate = new Calculate();
-        calculate.registry.add(new GeneratorItem("sin", Priority.ONE, 1, value -> new Number(Math.sin(value[0].getDouble()))));
+        calculate.registry.add(new GeneratorItem("sin", Priority.ONE, 1, value -> new Value(Math.sin(value[0].getDouble()))));
         //calculate.interpolate("sin(4.54)+13*.4*13.039");
         //calculate.interpolate("300*233.32+sin(.32)*342432.43+.43/23423423434234234342342342324342342234234324324234234324234234324234+234234/3/sin(34)");
         //System.out.println("Result: " + calculate.interpolate("1 * (2 + 3) / 4").solve());

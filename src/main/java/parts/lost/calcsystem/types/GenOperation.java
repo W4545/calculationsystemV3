@@ -4,8 +4,8 @@ public interface GenOperation {
 
     /**
      *
-     * @param array Number objects corresponding to those passed into generator by user
+     * @param array Value objects corresponding to those passed into generator by user
      * @return A number
      */
-    Number operation(Number[] array);
+    Value operation(Value[] array);
 }

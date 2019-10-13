@@ -15,4 +15,9 @@ public class Operator implements TreeType {
     public Number value() {
         return operation.operation(left.value(), right.value());
     }
+
+    @Override
+    public String toString() {
+        return "" + left + "OP" + right;
+    }
 }

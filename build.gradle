@@ -1,11 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.beryx.jlink' version '2.10.3'
 }
 
 group 'parts.lost'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 11
+mainClassName = "parts.lost.calcsystem.Calculate"
 
 repositories {
     mavenCentral()
@@ -13,4 +16,13 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jlink {
+
+    options = ['--compress', '2']
+
+    launcher {
+        name = 'launch'
+    }
 }

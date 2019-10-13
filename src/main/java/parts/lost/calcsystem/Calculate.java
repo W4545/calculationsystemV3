@@ -5,10 +5,10 @@ package parts.lost.calcsystem;
 
 import parts.lost.calcsystem.registry.*;
 import parts.lost.calcsystem.types.Number;
+import parts.lost.calcsystem.types.Operator;
+import parts.lost.calcsystem.types.TreeType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Calculate {
@@ -75,20 +75,60 @@ public class Calculate {
         return array;
     }
 
+    private Flag[] infixToPostfix(Flag[] flags) {
+        List<Flag> output = new ArrayList<>(flags.length);
+
+        Stack<Flag> stack = new Stack<>();
+
+        for (Flag flag : flags) {
+            if (flag.isNumber())
+                output.add(flag);
+            else if (flag.isOperator()) {
+                while (!stack.empty() && stack.peek().isOperator() &&
+                        ((OperatorItem) stack.peek().getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) {
+                    output.add(stack.pop());
+                }
+                stack.push(flag);
+            } else if (flag.isOpenParentheses()) {
+                stack.push(flag);
+            } else if (!stack.empty() && flag.isCloseParentheses()) {
+                while (!stack.empty() && !stack.peek().isOpenParentheses())
+                    output.add(stack.pop());
+                stack.pop();
+            }
+        }
+        while (!stack.empty())
+            output.add(stack.pop());
+
+        return output.toArray(new Flag[0]);
+    }
+
+    private TreeType buildTree(Flag[] postFix) {
+        Stack<TreeType> stack = new Stack<>();
+        for (Flag flag : postFix) {
+            if (flag.isNumber()) {
+                stack.push(((Number) flag.getObject()));
+            } else if (flag.isOperator()) {
+                TreeType right = stack.pop();
+                TreeType left = stack.pop();
+                stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
+            }
+        }
+        return stack.pop();
+    }
+
     public Calculation interpolate(String string) {
-        long time = System.nanoTime();
         string = string.replace(" ", "");
 
         List<String> groups = parseStringRegex(string);
         Flag[] flags = parseTypes(groups);
+        Flag[] postFix = infixToPostfix(flags);
 
-        long finish = System.nanoTime();
 
-        System.out.println(groups);
-        System.out.println(Arrays.toString(flags));
-        System.out.println((finish - time) / 1000000.0);
+        //System.out.println(groups);
+        //System.out.println(Arrays.toString(flags));
 
-        return null;
+        return new Calculation(string, buildTree(postFix));
     }
 
     public double calculate(String string) {
@@ -98,7 +138,29 @@ public class Calculate {
     public static void main(String[] args) {
         Calculate calculate = new Calculate();
         calculate.registry.add(new GeneratorItem("sin", Priority.ONE, 1, value -> new Number(Math.sin(value[0].getDouble()))));
-        calculate.interpolate("sin(4.54)+13*.4*13.039");
-        calculate.interpolate("300*233.32+sin(.32)*342432.43+.43/23423423434234234342342342324342342234234324324234234324234234324234+234234/3/sin(34)");
+        //calculate.interpolate("sin(4.54)+13*.4*13.039");
+        //calculate.interpolate("300*233.32+sin(.32)*342432.43+.43/23423423434234234342342342324342342234234324324234234324234234324234+234234/3/sin(34)");
+        //System.out.println("Result: " + calculate.interpolate("1 * (2 + 3) / 4").solve());
+        //System.out.println("Result:" + calculate.interpolate("(34.4-.4)-4/30").solve());
+        //System.out.println("Result: " + calculate.interpolate("4-3").solve());
+        //calculate.interpolate("1 * (2 + 3) / 4");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter equation: ");
+        String line = scanner.nextLine();
+        while (!line.toLowerCase().equals("q")) {
+            try {
+                long time = System.nanoTime();
+                double value = calculate.calculate(line);
+                long end = System.nanoTime();
+                System.out.println("Value: " + value);
+                System.out.println("Runtime: " + ((end - time) / 1000000.0) + "ms");
+                System.out.print("Enter equation: ");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            line = scanner.nextLine();
+        }
     }
 }

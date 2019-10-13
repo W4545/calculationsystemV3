@@ -42,7 +42,7 @@ public class Registry implements Iterable<Item> {
         operators.add(Defaults.DIVISION);
         operators.add(Defaults.MULTIPLICATION);
         operators.add(Defaults.SUBTRACTION);
-
+        operators.add(Defaults.EXPONENT);
         unaryOperators.add(Defaults.NEGATION);
     }
 
@@ -85,7 +85,7 @@ public class Registry implements Iterable<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return new Iterator<Item>() {
+        return new Iterator<>() {
             private Iterator<? extends Item> constantIterator = constants.iterator();
             private Iterator<? extends Item> operatorIterator = operators.iterator();
             private Iterator<? extends Item> generatorIterator = generators.iterator();

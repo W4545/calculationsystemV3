@@ -20,5 +20,8 @@ public class Defaults {
     public static final OperatorItem DIVISION = new OperatorItem("/", Priority.FIVE,
             (left, right) -> new Number(left.getDouble()  / right.getDouble()));
 
+    public static final OperatorItem EXPONENT = new OperatorItem("^", Priority.SIX,
+            (left, right) -> new Number(Math.pow(left.getDouble(), right.getDouble())));
+
     public static final UnaryItem NEGATION = new UnaryItem("-", Priority.NINE, Number::negate);
 }

@@ -10,10 +10,12 @@ public class Calculation {
 
     private TreeType tree;
     private String representation;
+    private Number value;
 
     Calculation(String representation, TreeType tree) {
         this.representation = representation;
         this.tree = tree;
+        this.value = null;
     }
 
     public String getCalculation() {
@@ -21,6 +23,10 @@ public class Calculation {
     }
 
     public Number solve() {
-        return tree.value();
+        if (value == null) {
+            value = tree.value();
+            return value;
+        } else
+            return value;
     }
 }

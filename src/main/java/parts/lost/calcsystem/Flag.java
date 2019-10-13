@@ -2,6 +2,7 @@ package parts.lost.calcsystem;
 
 import parts.lost.calcsystem.registry.GeneratorItem;
 import parts.lost.calcsystem.registry.OperatorItem;
+import parts.lost.calcsystem.types.Number;
 
 class Flag {
 

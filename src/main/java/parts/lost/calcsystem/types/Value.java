@@ -1,5 +1,7 @@
 package parts.lost.calcsystem.types;
 
+import java.util.Objects;
+
 /**
  *
  * @version 1.0.0
@@ -33,6 +35,19 @@ public final class Value implements TreeType {
     public Value negate() {
         value = -value;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Value value1 = (Value) o;
+        return Double.compare(value1.value, value) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override

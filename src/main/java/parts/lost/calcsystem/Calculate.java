@@ -28,12 +28,12 @@ public class Calculate {
         initRegex();
     }
 
-    private void initRegex() {
+    protected void initRegex() {
         pattern = Pattern.compile(
                 "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)");
     }
 
-    private List<String> parseStringRegex(String string) {
+    protected List<String> parseStringRegex(String string) {
         var matcher = pattern.matcher(string);
 
         List<String> groups = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Calculate {
     }
 
 
-    private Flag[] parseTypes(List<String> strings) {
+    protected Flag[] parseTypes(List<String> strings) {
         Flag[] array = new Flag[strings.size()];
         Outer:
         for (int i = 0; i < strings.size(); i++) {
@@ -75,7 +75,11 @@ public class Calculate {
         return array;
     }
 
-    private Flag[] generatorParse(Flag[] flags) {
+    protected int[] parenthesesPositions() {
+        return null;
+    }
+
+    protected Flag[] generatorParse(Flag[] flags) {
         try {
             for (int i = 0; i < flags.length; i++) {
                 if (flags[i].isGenerator()) {
@@ -117,7 +121,7 @@ public class Calculate {
         return null;
     }
 
-    private Flag[] infixToPostfix(Flag[] flags) {
+    protected Flag[] infixToPostfix(Flag[] flags) {
         List<Flag> output = new ArrayList<>(flags.length);
 
         Stack<Flag> stack = new Stack<>();
@@ -145,7 +149,7 @@ public class Calculate {
         return output.toArray(new Flag[0]);
     }
 
-    private TreeType buildTree(Flag[] postFix) {
+    protected TreeType buildTree(Flag[] postFix) {
         Stack<TreeType> stack = new Stack<>();
         for (Flag flag : postFix) {
             if (flag.isNumber()) {

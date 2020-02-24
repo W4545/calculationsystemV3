@@ -32,6 +32,10 @@ class Flag {
         return object.equals(")");
     }
 
+    public boolean isComma() {
+        return object.equals(",");
+    }
+
     public Object getObject() {
         return object;
     }

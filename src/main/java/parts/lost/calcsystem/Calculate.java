@@ -30,7 +30,7 @@ public class Calculate {
 
     private void initRegex() {
         pattern = Pattern.compile(
-                "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^()])|([^\\d()*+\\-/%^]+)");
+                "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)");
     }
 
     private List<String> parseStringRegex(String string) {
@@ -58,7 +58,7 @@ public class Calculate {
                 double value = Double.parseDouble(string);
                 array[i] = new Flag(new Value(value));
             } catch (NumberFormatException | NullPointerException ex) {
-                if (string.equals("(") || string.equals(")")) {
+                if (string.equals("(") || string.equals(")") || string.equals(",")) {
                     array[i] = new Flag(string);
                     continue;
                 }
@@ -73,6 +73,48 @@ public class Calculate {
         }
 
         return array;
+    }
+
+    private Flag[] generatorParse(Flag[] flags) {
+        try {
+            for (int i = 0; i < flags.length; i++) {
+                if (flags[i].isGenerator()) {
+                    int openParenthesisPos = 0;
+                    int closedParenthesisPos = 0;
+                    if (i + 1 != flags.length && flags[i + 1].isOpenParentheses())
+                        openParenthesisPos = i + 1;
+                    else
+                        throw new RuntimeException("Incorrect Generator formatting: \"(\" expected");
+                    int openParenthesesEncountered = 0;
+                    for (int k = i + 2; k < flags.length; k++) {
+                        if (flags[k].isOpenParentheses())
+                            openParenthesesEncountered++;
+                        else if (flags[k].isCloseParentheses() && openParenthesesEncountered > 0)
+                            openParenthesesEncountered--;
+                        else if (flags[k].isCloseParentheses() && openParenthesesEncountered == 0) {
+                            closedParenthesisPos = k;
+                            break;
+                        }
+                    }
+
+                    List<Integer> commaPositions = new ArrayList<>();
+                    for (int j = openParenthesisPos + 1; j < closedParenthesisPos; j++) {
+                        if (flags[j].isComma())
+                            commaPositions.add(j);
+                    }
+
+                    List<TreeType> parsed;
+                }
+
+
+            }
+
+
+        } catch (IndexOutOfBoundsException ex) {{
+            throw new RuntimeException("Incorrect Generator formatting", ex);
+        }}
+
+        return null;
     }
 
     private Flag[] infixToPostfix(Flag[] flags) {
@@ -122,6 +164,7 @@ public class Calculate {
 
         List<String> groups = parseStringRegex(string);
         Flag[] flags = parseTypes(groups);
+        Flag[] generatorPass = generatorParse(flags);
         Flag[] postFix = infixToPostfix(flags);
 
 

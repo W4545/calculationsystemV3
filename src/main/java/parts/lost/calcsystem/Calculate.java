@@ -50,7 +50,7 @@ public class Calculate {
                 } else if (output2 != null) {
                     // Matched an operator
                     for (Item item : registry) {
-                        if (item.getIdentifier().equals(string)) {
+                        if (item.getIdentifier().equals(output2)) {
                             groups.add(new Flag(item));
                             break;
                         }
@@ -60,7 +60,7 @@ public class Calculate {
                 else if (output4 != null) {
                     // Found generator
                     for (Item item : registry) {
-                        if (item.getIdentifier().equals(string)) {
+                        if (item.getIdentifier().equals(output4)) {
                             groups.add(new Flag(item));
                             break;
                         }

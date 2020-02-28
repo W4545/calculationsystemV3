@@ -15,6 +15,7 @@ public class Calculate {
 
     private Registry registry;
     private String oldreg = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([a-zA-Z]+)|([*+\\-/%^])|([(])|([)])";
+    private String oldreg2 = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)";
     private Pattern pattern;
 
 
@@ -29,19 +30,44 @@ public class Calculate {
     }
 
     protected void initRegex() {
-        pattern = Pattern.compile(
-                "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)");
+        pattern = Pattern.compile("(\\d+(?:[.]\\d*)?|[.]\\d+)|([*+\\-/%^])|([(),])|([^\\d()*+\\-/%^,.\\s]+)");
     }
 
-    protected List<String> parseStringRegex(String string) {
+    protected List<Flag> parseStringRegex(String string) {
         var matcher = pattern.matcher(string);
 
-        List<String> groups = new ArrayList<>();
+        List<Flag> groups = new ArrayList<>();
         try {
             while (matcher.find()) {
-                groups.add(matcher.group());
+                String output1 = matcher.group(1);
+                String output2 = matcher.group(2);
+                String output3 = matcher.group(3);
+                String output4 = matcher.group(4);
+
+                if (output1 != null) {
+                    // Matched a number
+                    groups.add(new Flag(new Value(Double.parseDouble(output1))));
+                } else if (output2 != null) {
+                    // Matched an operator
+                    for (Item item : registry) {
+                        if (item.getIdentifier().equals(string)) {
+                            groups.add(new Flag(item));
+                            break;
+                        }
+                    }
+                } else if (output3 != null) // Found comma or parentheses
+                    groups.add(new Flag(output3));
+                else if (output4 != null) {
+                    // Found generator
+                    for (Item item : registry) {
+                        if (item.getIdentifier().equals(string)) {
+                            groups.add(new Flag(item));
+                            break;
+                        }
+                    }
+                }
             }
-        } catch (StackOverflowError ex) {
+        } catch (StackOverflowError | NumberFormatException ex) {
             throw new RuntimeException("Incorrect syntax in string.", ex);
         }
 
@@ -164,10 +190,10 @@ public class Calculate {
     }
 
     public Calculation interpolate(String string) {
-        string = string.replace(" ", "");
 
-        List<String> groups = parseStringRegex(string);
-        Flag[] flags = parseTypes(groups);
+        List<Flag> groups = parseStringRegex(string);
+        Flag[] flags = groups.toArray(new Flag[0]);
+        //Flag[] flags = parseTypes(groups);
         Flag[] generatorPass = generatorParse(flags);
         Flag[] postFix = infixToPostfix(flags);
 
@@ -191,7 +217,7 @@ public class Calculate {
         //System.out.println("Result:" + calculate.interpolate("(34.4-.4)-4/30").solve());
         //System.out.println("Result: " + calculate.interpolate("4-3").solve());
         //calculate.interpolate("1 * (2 + 3) / 4");
-
+        calculate.interpolate("45*5");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter equation: ");
         String line = scanner.nextLine();

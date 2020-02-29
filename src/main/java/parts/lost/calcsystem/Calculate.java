@@ -217,7 +217,7 @@ public class Calculate {
         //System.out.println("Result:" + calculate.interpolate("(34.4-.4)-4/30").solve());
         //System.out.println("Result: " + calculate.interpolate("4-3").solve());
         //calculate.interpolate("1 * (2 + 3) / 4");
-        calculate.interpolate("45*5");
+        Calculation calculation = calculate.interpolate("45*5");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter equation: ");
         String line = scanner.nextLine();

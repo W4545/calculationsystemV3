@@ -23,10 +23,8 @@ public class Calculation {
     }
 
     public Value solve() {
-        if (value == null) {
+        if (value == null)
             value = tree.value();
-            return value;
-        } else
-            return value;
+        return value;
     }
 }

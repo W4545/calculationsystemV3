@@ -4,6 +4,7 @@ package parts.lost.calcsystem;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.registry.*;
+import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
 import parts.lost.calcsystem.types.Operator;
 import parts.lost.calcsystem.types.TreeType;
@@ -101,50 +102,84 @@ public class Calculate {
         return array;
     }
 
-    protected int[] parenthesesPositions() {
-        return null;
+    protected TreeType[] buildGenerator(List<Flag> list) {
+        List<TreeType> toOutput = new ArrayList<>();
+        List<Flag> build = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            if (list.get(i).isGeneratorItem()) {
+                int[] pos = outerParenthesis(list, i + 1);
+                TreeType[] genTrees = buildGenerator(list.subList(pos[0], pos[1]));
+                GeneratorItem item = (GeneratorItem) list.get(i).getObject();
+                if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
+                    throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
+                build.add(new Flag(new Generator(genTrees, item.getOperation())));
+                i = pos[1];
+            } else if (list.get(i).isComma()) {
+                Flag[] postfix = infixToPostfix(build.toArray(new Flag[0]));
+                toOutput.add(buildTree(postfix));
+                build.clear();
+            } else {
+                build.add(list.get(i));
+            }
+
+        }
+        if (build.size() > 0)
+        {
+            Flag[] postfix = infixToPostfix(build.toArray(new Flag[0]));
+            toOutput.add(buildTree(postfix));
+        }
+
+        return toOutput.toArray(new TreeType[0]);
     }
 
-    protected Flag[] generatorParse(Flag[] flags) {
+    protected int[] outerParenthesis(List<Flag> flags, int start) {
+        int openParenthesisPos = 0;
+        int closedParenthesisPos = 0;
+        if (start + 1 != flags.size() && flags.get(start).isOpenParentheses())
+            openParenthesisPos = start;
+        else
+            throw new RuntimeException("Incorrect Generator formatting: \"(\" expected");
+        int openParenthesesEncountered = 0;
+        for (int k = start + 1; k < flags.size(); k++) {
+            if (flags.get(k).isOpenParentheses())
+                openParenthesesEncountered++;
+            else if (flags.get(k).isCloseParentheses() && openParenthesesEncountered > 0)
+                openParenthesesEncountered--;
+            else if (flags.get(k).isCloseParentheses() && openParenthesesEncountered == 0) {
+                closedParenthesisPos = k;
+                break;
+            }
+        }
+
+        return new int[] {openParenthesisPos, closedParenthesisPos};
+    }
+
+    protected Flag[] generatorParse(List<Flag> flags) {
+        List<Flag> list = new ArrayList<>();
         try {
-            for (int i = 0; i < flags.length; i++) {
-                if (flags[i].isGenerator()) {
-                    int openParenthesisPos = 0;
-                    int closedParenthesisPos = 0;
-                    if (i + 1 != flags.length && flags[i + 1].isOpenParentheses())
-                        openParenthesisPos = i + 1;
-                    else
-                        throw new RuntimeException("Incorrect Generator formatting: \"(\" expected");
-                    int openParenthesesEncountered = 0;
-                    for (int k = i + 2; k < flags.length; k++) {
-                        if (flags[k].isOpenParentheses())
-                            openParenthesesEncountered++;
-                        else if (flags[k].isCloseParentheses() && openParenthesesEncountered > 0)
-                            openParenthesesEncountered--;
-                        else if (flags[k].isCloseParentheses() && openParenthesesEncountered == 0) {
-                            closedParenthesisPos = k;
-                            break;
-                        }
-                    }
+            for (int i = 0; i < flags.size(); i++) {
+                if (flags.get(i).isGeneratorItem()) {
+                    int[] pos = outerParenthesis(flags, i + 1);
+                    TreeType[] genTrees = buildGenerator(flags.subList(pos[0] + 1, pos[1]));
 
-                    List<Integer> commaPositions = new ArrayList<>();
-                    for (int j = openParenthesisPos + 1; j < closedParenthesisPos; j++) {
-                        if (flags[j].isComma())
-                            commaPositions.add(j);
-                    }
+                    GeneratorItem item = (GeneratorItem) flags.get(i).getObject();
+                    if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
+                        throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
 
-                    List<TreeType> parsed;
+                    list.add(new Flag(new Generator(genTrees, item.getOperation())));
+                    i = pos[1];
                 }
-
+                else
+                    list.add(flags.get(i));
 
             }
 
 
-        } catch (IndexOutOfBoundsException ex) {{
+        } catch (IndexOutOfBoundsException ex) {
             throw new RuntimeException("Incorrect Generator formatting", ex);
-        }}
+        }
 
-        return null;
+        return list.toArray(new Flag[0]);
     }
 
     protected Flag[] infixToPostfix(Flag[] flags) {
@@ -153,7 +188,7 @@ public class Calculate {
         Stack<Flag> stack = new Stack<>();
 
         for (Flag flag : flags) {
-            if (flag.isNumber())
+            if (flag.isNumber() || flag.isGenerator())
                 output.add(flag);
             else if (flag.isOperator()) {
                 while (!stack.empty() && stack.peek().isOperator() &&
@@ -178,8 +213,8 @@ public class Calculate {
     protected TreeType buildTree(Flag[] postFix) {
         Stack<TreeType> stack = new Stack<>();
         for (Flag flag : postFix) {
-            if (flag.isNumber()) {
-                stack.push(((Value) flag.getObject()));
+            if (flag.isNumber() || flag.isGenerator()) {
+                stack.push((TreeType) flag.getObject());
             } else if (flag.isOperator()) {
                 TreeType right = stack.pop();
                 TreeType left = stack.pop();
@@ -192,10 +227,9 @@ public class Calculate {
     public Calculation interpolate(String string) {
 
         List<Flag> groups = parseStringRegex(string);
-        Flag[] flags = groups.toArray(new Flag[0]);
         //Flag[] flags = parseTypes(groups);
-        Flag[] generatorPass = generatorParse(flags);
-        Flag[] postFix = infixToPostfix(flags);
+        Flag[] generatorPass = generatorParse(groups);
+        Flag[] postFix = infixToPostfix(generatorPass);
 
 
         //System.out.println(groups);
@@ -210,13 +244,27 @@ public class Calculate {
 
     public static void main(String[] args) {
         Calculate calculate = new Calculate();
-        calculate.registry.add(new GeneratorItem("sin", Priority.ONE, 1, value -> new Value(Math.sin(value[0].getDouble()))));
+        calculate.registry.add(new GeneratorItem("sin",1, value -> new Value(Math.sin(value[0].value().getDouble()))));
+        calculate.registry.add(new GeneratorItem("max", -1, value -> {
+            double max = value[0].value().getDouble();
+            for (int i = 1; i < value.length; ++i) {
+                double current = value[i].value().getDouble();
+                if (current > max) {
+                    max = current;
+                }
+            }
+            return new Value(max);
+        }));
         //calculate.interpolate("sin(4.54)+13*.4*13.039");
         //calculate.interpolate("300*233.32+sin(.32)*342432.43+.43/23423423434234234342342342324342342234234324324234234324234234324234+234234/3/sin(34)");
         //System.out.println("Result: " + calculate.interpolate("1 * (2 + 3) / 4").solve());
         //System.out.println("Result:" + calculate.interpolate("(34.4-.4)-4/30").solve());
         //System.out.println("Result: " + calculate.interpolate("4-3").solve());
         //calculate.interpolate("1 * (2 + 3) / 4");
+        System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
+        System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
+        calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
+        calculate.interpolate("4 * sin(4)");
         calculate.interpolate("45*5");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter equation: ");

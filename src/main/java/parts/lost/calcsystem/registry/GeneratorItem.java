@@ -11,10 +11,11 @@ public class GeneratorItem extends Item {
     private GenOperation operation;
     private int argumentCount;
 
-    public GeneratorItem(String identifier, Priority priority, int argumentCount, GenOperation operation) {
+    public GeneratorItem(String identifier, int argumentCount, GenOperation operation) {
         this.identifier = identifier;
-        this.priority = priority;
+        this.priority = Priority.ONE;
         this.operation = operation;
+        this.argumentCount = argumentCount;
     }
 
     public GenOperation getOperation() {

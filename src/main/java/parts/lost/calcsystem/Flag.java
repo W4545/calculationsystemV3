@@ -2,6 +2,7 @@ package parts.lost.calcsystem;
 
 import parts.lost.calcsystem.registry.GeneratorItem;
 import parts.lost.calcsystem.registry.OperatorItem;
+import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
 
 class Flag {
@@ -20,7 +21,7 @@ class Flag {
         return object instanceof OperatorItem;
     }
 
-    public boolean isGenerator() {
+    public boolean isGeneratorItem() {
         return object instanceof GeneratorItem;
     }
 
@@ -34,6 +35,10 @@ class Flag {
 
     public boolean isComma() {
         return object.equals(",");
+    }
+
+    public boolean isGenerator() {
+        return object instanceof Generator;
     }
 
     public Object getObject() {

@@ -4,6 +4,8 @@ package parts.lost.calcsystem.registry;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.Priority;
+import parts.lost.calcsystem.registry.types.OperatorItem;
+import parts.lost.calcsystem.registry.types.UnaryItem;
 import parts.lost.calcsystem.types.Value;
 
 public class Defaults {

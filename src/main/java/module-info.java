@@ -4,5 +4,7 @@ module parts.lost.CalculationSystem {
 
     exports parts.lost.calcsystem;
     exports parts.lost.calcsystem.registry;
+    exports parts.lost.calcsystem.registry.types;
     exports parts.lost.calcsystem.types;
+    exports parts.lost.calcsystem.types.operations;
 }

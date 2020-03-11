@@ -1,4 +1,4 @@
-package parts.lost.calcsystem.registry;
+package parts.lost.calcsystem.registry.types;
 
 // Name: Jack Young
 // Date: 10/8/2019

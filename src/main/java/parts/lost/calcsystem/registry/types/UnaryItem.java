@@ -1,10 +1,10 @@
-package parts.lost.calcsystem.registry;
+package parts.lost.calcsystem.registry.types;
 
 // Name: Jack Young
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.Priority;
-import parts.lost.calcsystem.types.UnaryOperation;
+import parts.lost.calcsystem.types.operations.UnaryOperation;
 
 public class UnaryItem extends Item {
 

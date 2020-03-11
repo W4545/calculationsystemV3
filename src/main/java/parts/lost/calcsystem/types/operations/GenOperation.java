@@ -1,4 +1,7 @@
-package parts.lost.calcsystem.types;
+package parts.lost.calcsystem.types.operations;
+
+import parts.lost.calcsystem.types.TreeType;
+import parts.lost.calcsystem.types.Value;
 
 public interface GenOperation {
 

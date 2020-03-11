@@ -1,5 +1,7 @@
 package parts.lost.calcsystem.types;
 
+import parts.lost.calcsystem.types.operations.Operation;
+
 public class Operator implements TreeType {
 
     private TreeType left, right;

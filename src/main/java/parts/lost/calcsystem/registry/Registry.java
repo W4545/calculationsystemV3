@@ -3,6 +3,8 @@ package parts.lost.calcsystem.registry;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calcsystem.registry.types.*;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;

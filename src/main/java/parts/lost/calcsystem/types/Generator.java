@@ -1,5 +1,7 @@
 package parts.lost.calcsystem.types;
 
+import parts.lost.calcsystem.types.operations.GenOperation;
+
 public class Generator implements TreeType {
 
     private TreeType[] array;

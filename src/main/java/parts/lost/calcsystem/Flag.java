@@ -1,11 +1,11 @@
 package parts.lost.calcsystem;
 
-import parts.lost.calcsystem.registry.GeneratorItem;
-import parts.lost.calcsystem.registry.OperatorItem;
+import parts.lost.calcsystem.registry.types.GeneratorItem;
+import parts.lost.calcsystem.registry.types.OperatorItem;
 import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
 
-class Flag {
+public class Flag {
 
     private Object object;
 

@@ -4,6 +4,9 @@ package parts.lost.calcsystem;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.registry.*;
+import parts.lost.calcsystem.registry.types.GeneratorItem;
+import parts.lost.calcsystem.registry.types.Item;
+import parts.lost.calcsystem.registry.types.OperatorItem;
 import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
 import parts.lost.calcsystem.types.Operator;
@@ -134,7 +137,7 @@ public class Calculate {
 
     protected int[] outerParenthesis(List<Flag> flags, int start) {
         int openParenthesisPos = 0;
-        int closedParenthesisPos = 0;
+        int closedParenthesisPos = -1;
         if (start + 1 != flags.size() && flags.get(start).isOpenParentheses())
             openParenthesisPos = start;
         else
@@ -150,6 +153,9 @@ public class Calculate {
                 break;
             }
         }
+
+        if (closedParenthesisPos == -1)
+            throw new RuntimeException("Invalid formatting: missing a closing parenthesis \")\"");
 
         return new int[] {openParenthesisPos, closedParenthesisPos};
     }

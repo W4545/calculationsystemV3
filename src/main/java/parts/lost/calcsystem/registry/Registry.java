@@ -12,7 +12,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 
 /**
- * @version 0.5.0
+ * @version 0.5.2
  */
 public class Registry implements Iterable<Item> {
 
@@ -40,12 +40,12 @@ public class Registry implements Iterable<Item> {
     }
 
     public void loadDefaults() {
-        operators.add(Defaults.ADDITION);
-        operators.add(Defaults.DIVISION);
-        operators.add(Defaults.MULTIPLICATION);
-        operators.add(Defaults.SUBTRACTION);
-        operators.add(Defaults.EXPONENT);
-        unaryOperators.add(Defaults.NEGATION);
+        add(Defaults.ADDITION);
+        add(Defaults.DIVISION);
+        add(Defaults.MULTIPLICATION);
+        add(Defaults.SUBTRACTION);
+        add(Defaults.EXPONENT);
+        add(Defaults.NEGATION);
     }
 
     public boolean add(OperatorItem item) {
@@ -88,42 +88,45 @@ public class Registry implements Iterable<Item> {
     @Override
     public Iterator<Item> iterator() {
         return new Iterator<>() {
-            private Iterator<? extends Item> constantIterator = constants.iterator();
-            private Iterator<? extends Item> operatorIterator = operators.iterator();
-            private Iterator<? extends Item> generatorIterator = generators.iterator();
-            private byte current = 0;
+            @SuppressWarnings("unchecked")
+            private Iterator<? extends Item>[] iterators = new Iterator[4];
+            {
+                iterators[0] = operators.iterator();
+                iterators[1] = generators.iterator();
+                iterators[2] = constants.iterator();
+                iterators[3] = unaryOperators.iterator();
+            }
+
+            private int current = 0;
 
             @Override
             public boolean hasNext() {
-                if (operatorIterator.hasNext()) {
-                    current = 0;
-                    return true;
-                } else if (generatorIterator.hasNext()) {
-                    current = 1;
-                    return true;
-                } else if (constantIterator.hasNext()) {
-                    current = 3;
-                    return true;
-                } else
-                    return false;
-
+                for (int i = current; i < iterators.length; ++i) {
+                    if (iterators[i].hasNext()) {
+                        current = i;
+                        return true;
+                    }
+                }
+                return false;
             }
 
             @Override
             public Item next() {
-                if (current == 0)
-                    return operatorIterator.next();
-                else if (current == 1)
-                    return generatorIterator.next();
-                else
-                    return constantIterator.next();
+                return iterators[current].next();
             }
         };
     }
 
     @Override
     public void forEach(Consumer<? super Item> action) {
-
+        for (OperatorItem item : operators)
+            action.accept(item);
+        for (GeneratorItem item : generators)
+            action.accept(item);
+        for (ConstantItem item : constants)
+            action.accept(item);
+        for (UnaryItem item : unaryOperators)
+            action.accept(item);
     }
 
     @Override

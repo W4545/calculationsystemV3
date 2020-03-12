@@ -61,7 +61,7 @@ public class Calculate {
      * @param list list of complete expression (may be a partial expression, but must contain the complete generator
      * @param build list being used to build the new expression with the properly set up Generator object
      * @param i Position of GeneratorItem Flag in list
-     * @param genTrees An array of the expressions (represented as {@link TreeType})
+     * @param genTrees An array of the expressions inside the generator (expressions are represented as {@link TreeType})
      */
     private void genSetup(List<Flag> list, List<Flag> build, int i, TreeType[] genTrees) {
         GeneratorItem item = (GeneratorItem) list.get(i).getObject();

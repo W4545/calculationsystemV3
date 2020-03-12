@@ -5,7 +5,6 @@ package parts.lost.calcsystem;
 
 import parts.lost.calcsystem.registry.*;
 import parts.lost.calcsystem.registry.types.GeneratorItem;
-import parts.lost.calcsystem.registry.types.Item;
 import parts.lost.calcsystem.registry.types.OperatorItem;
 import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
@@ -13,96 +12,21 @@ import parts.lost.calcsystem.types.Operator;
 import parts.lost.calcsystem.types.TreeType;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class Calculate {
 
     private Registry registry;
-    private String oldreg = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([a-zA-Z]+)|([*+\\-/%^])|([(])|([)])";
-    private String oldreg2 = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)";
-    private Pattern pattern;
+    private StringParser parseStringRegex;
 
 
     public Calculate() {
         registry = new Registry();
-        initRegex();
+        parseStringRegex = new StringParser();
     }
 
     public Calculate(Registry registry) {
         this.registry = registry;
-        initRegex();
-    }
-
-    protected void initRegex() {
-        pattern = Pattern.compile("(\\d+(?:[.]\\d*)?|[.]\\d+)|([*+\\-/%^])|([(),])|([^\\d()*+\\-/%^,.\\s]+)");
-    }
-
-    protected List<Flag> parseStringRegex(String string) {
-        var matcher = pattern.matcher(string);
-
-        List<Flag> groups = new ArrayList<>();
-        try {
-            while (matcher.find()) {
-                String output1 = matcher.group(1);
-                String output2 = matcher.group(2);
-                String output3 = matcher.group(3);
-                String output4 = matcher.group(4);
-
-                if (output1 != null) {
-                    // Matched a number
-                    groups.add(new Flag(new Value(Double.parseDouble(output1))));
-                } else if (output2 != null) {
-                    // Matched an operator
-                    for (Item item : registry) {
-                        if (item.getIdentifier().equals(output2)) {
-                            groups.add(new Flag(item));
-                            break;
-                        }
-                    }
-                } else if (output3 != null) // Found comma or parentheses
-                    groups.add(new Flag(output3));
-                else if (output4 != null) {
-                    // Found generator
-                    for (Item item : registry) {
-                        if (item.getIdentifier().equals(output4)) {
-                            groups.add(new Flag(item));
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (StackOverflowError | NumberFormatException ex) {
-            throw new RuntimeException("Incorrect syntax in string.", ex);
-        }
-
-        return groups;
-    }
-
-
-    protected Flag[] parseTypes(List<String> strings) {
-        Flag[] array = new Flag[strings.size()];
-        Outer:
-        for (int i = 0; i < strings.size(); i++) {
-            String string = strings.get(i);
-            try {
-                double value = Double.parseDouble(string);
-                array[i] = new Flag(new Value(value));
-            } catch (NumberFormatException | NullPointerException ex) {
-                if (string.equals("(") || string.equals(")") || string.equals(",")) {
-                    array[i] = new Flag(string);
-                    continue;
-                }
-                for (Item item : registry) {
-                    if (item.getIdentifier().equals(string)) {
-                        array[i] = new Flag(item);
-                        continue Outer;
-                    }
-                }
-                throw new RuntimeException("Unknown operator found.");
-            }
-        }
-
-        return array;
+        parseStringRegex = new StringParser();
     }
 
     protected TreeType[] buildGenerator(List<Flag> list) {
@@ -112,10 +36,7 @@ public class Calculate {
             if (list.get(i).isGeneratorItem()) {
                 int[] pos = outerParenthesis(list, i + 1);
                 TreeType[] genTrees = buildGenerator(list.subList(pos[0], pos[1]));
-                GeneratorItem item = (GeneratorItem) list.get(i).getObject();
-                if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
-                    throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
-                build.add(new Flag(new Generator(genTrees, item.getOperation())));
+                genSetup(list, build, i, genTrees);
                 i = pos[1];
             } else if (list.get(i).isComma()) {
                 Flag[] postfix = infixToPostfix(build.toArray(new Flag[0]));
@@ -135,8 +56,22 @@ public class Calculate {
         return toOutput.toArray(new TreeType[0]);
     }
 
+    /**
+     *
+     * @param list list of complete expression (may be a partial expression, but must contain the complete generator
+     * @param build list being used to build the new expression with the properly set up Generator object
+     * @param i Position of GeneratorItem Flag in list
+     * @param genTrees An array of the expressions (represented as {@link TreeType})
+     */
+    private void genSetup(List<Flag> list, List<Flag> build, int i, TreeType[] genTrees) {
+        GeneratorItem item = (GeneratorItem) list.get(i).getObject();
+        if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
+            throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
+        build.add(new Flag(new Generator(genTrees, item.getOperation())));
+    }
+
     protected int[] outerParenthesis(List<Flag> flags, int start) {
-        int openParenthesisPos = 0;
+        int openParenthesisPos;
         int closedParenthesisPos = -1;
         if (start + 1 != flags.size() && flags.get(start).isOpenParentheses())
             openParenthesisPos = start;
@@ -167,12 +102,7 @@ public class Calculate {
                 if (flags.get(i).isGeneratorItem()) {
                     int[] pos = outerParenthesis(flags, i + 1);
                     TreeType[] genTrees = buildGenerator(flags.subList(pos[0] + 1, pos[1]));
-
-                    GeneratorItem item = (GeneratorItem) flags.get(i).getObject();
-                    if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
-                        throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
-
-                    list.add(new Flag(new Generator(genTrees, item.getOperation())));
+                    genSetup(flags, list, i, genTrees);
                     i = pos[1];
                 }
                 else
@@ -232,7 +162,7 @@ public class Calculate {
 
     public Calculation interpolate(String string) {
 
-        List<Flag> groups = parseStringRegex(string);
+        List<Flag> groups = parseStringRegex.parseStringRegex(string, registry);
         //Flag[] flags = parseTypes(groups);
         Flag[] generatorPass = generatorParse(groups);
         Flag[] postFix = infixToPostfix(generatorPass);
@@ -261,33 +191,32 @@ public class Calculate {
             }
             return new Value(max);
         }));
-        //calculate.interpolate("sin(4.54)+13*.4*13.039");
-        //calculate.interpolate("300*233.32+sin(.32)*342432.43+.43/23423423434234234342342342324342342234234324324234234324234234324234+234234/3/sin(34)");
-        //System.out.println("Result: " + calculate.interpolate("1 * (2 + 3) / 4").solve());
-        //System.out.println("Result:" + calculate.interpolate("(34.4-.4)-4/30").solve());
-        //System.out.println("Result: " + calculate.interpolate("4-3").solve());
-        //calculate.interpolate("1 * (2 + 3) / 4");
-        System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
-        System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
+
+
+        //System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
+        //System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
         calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
         calculate.interpolate("4 * sin(4)");
         calculate.interpolate("45*5");
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter equation: ");
-        String line = scanner.nextLine();
-        while (!line.toLowerCase().equals("q")) {
+
+        while (true) {
             try {
+                System.out.print("Enter equation: ");
+                String line = scanner.nextLine();
+
+                if (line.toLowerCase().equals("q"))
+                    break;
+
                 long time = System.nanoTime();
                 double value = calculate.calculate(line);
                 long end = System.nanoTime();
                 System.out.println("Value: " + value);
                 System.out.println("Runtime: " + ((end - time) / 1000000.0) + "ms");
-                System.out.print("Enter equation: ");
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-            line = scanner.nextLine();
         }
     }
 }

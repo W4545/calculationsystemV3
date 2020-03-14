@@ -8,23 +8,23 @@ import parts.lost.calcsystem.types.TreeType;
 
 public class Calculation {
 
-    private TreeType tree;
-    private String representation;
-    private Value value;
+	private TreeType tree;
+	private String representation;
+	private Value value;
 
-    Calculation(String representation, TreeType tree) {
-        this.representation = representation;
-        this.tree = tree;
-        this.value = null;
-    }
+	Calculation(String representation, TreeType tree) {
+		this.representation = representation;
+		this.tree = tree;
+		this.value = null;
+	}
 
-    public String getCalculation() {
-        return representation;
-    }
+	public String getCalculation() {
+		return representation;
+	}
 
-    public Value solve() {
-        if (value == null)
-            value = tree.value();
-        return value;
-    }
+	public Value solve() {
+		if (value == null)
+			value = tree.value();
+		return value;
+	}
 }

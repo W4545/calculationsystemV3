@@ -8,24 +8,24 @@ import parts.lost.calcsystem.types.operations.Operation;
 
 public class OperatorItem extends Item {
 
-    private Operation operation;
+	private Operation operation;
 
-    public OperatorItem(String identifier, Priority priority, Operation operation) {
-        this.identifier = identifier;
-        this.priority = priority;
-        this.operation = operation;
-    }
+	public OperatorItem(String identifier, Priority priority, Operation operation) {
+		this.identifier = identifier;
+		this.priority = priority;
+		this.operation = operation;
+	}
 
-    public Operation getOperation() {
-        return operation;
-    }
+	public Operation getOperation() {
+		return operation;
+	}
 
-    @Override
-    public String toString() {
-        return "OperatorItem{" +
+	@Override
+	public String toString() {
+		return "OperatorItem{" +
 
-                "identifier='" + identifier + '\'' +
-                ", priority=" + priority +
-                '}';
-    }
+				"identifier='" + identifier + '\'' +
+				", priority=" + priority +
+				'}';
+	}
 }

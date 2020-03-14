@@ -8,15 +8,15 @@ import parts.lost.calcsystem.types.Value;
 
 public class ConstantItem extends Item {
 
-    private Value value;
+	private Value value;
 
-    public ConstantItem(String identifier, Value value) {
-        this.identifier = identifier;
-        this.priority = Priority.ONE;
-        this.value = value;
-    }
+	public ConstantItem(String identifier, Value value) {
+		this.identifier = identifier;
+		this.priority = Priority.ONE;
+		this.value = value;
+	}
 
-    public Value getValue() {
-        return value;
-    }
+	public Value getValue() {
+		return value;
+	}
 }

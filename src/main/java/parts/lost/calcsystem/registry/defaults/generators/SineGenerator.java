@@ -7,7 +7,7 @@ import parts.lost.calcsystem.registry.types.GeneratorItem;
 import parts.lost.calcsystem.types.operations.defaults.SineGenOperation;
 
 public class SineGenerator extends GeneratorItem {
-    public SineGenerator() {
-        super("sin", 1, SineGenOperation.SINE_GEN_OPERATION);
-    }
+	public SineGenerator() {
+		super("sin", 1, SineGenOperation.SINE_GEN_OPERATION);
+	}
 }

@@ -9,15 +9,15 @@ import parts.lost.calcsystem.types.operations.GenOperation;
 
 public class SineGenOperation implements GenOperation {
 
-    public static final SineGenOperation SINE_GEN_OPERATION = new SineGenOperation();
+	public static final SineGenOperation SINE_GEN_OPERATION = new SineGenOperation();
 
-    @Override
-    public Value operation(TreeType[] array) {
-        return new Value(Math.sin(array[0].value().getDouble()));
-    }
+	@Override
+	public Value operation(TreeType[] array) {
+		return new Value(Math.sin(array[0].value().getDouble()));
+	}
 
-    @Override
-    public String toString() {
-        return "sin";
-    }
+	@Override
+	public String toString() {
+		return "sin";
+	}
 }

@@ -8,33 +8,33 @@ import parts.lost.calcsystem.types.operations.UnaryOperation;
 
 public class UnaryItem extends Item {
 
-    private UnaryOperation operation;
+	private UnaryOperation operation;
 
-    public UnaryItem(String identifier, Priority priority, UnaryOperation operation) {
-        this.identifier = identifier;
-        this.priority = priority;
-        this.operation = operation;
-    }
+	public UnaryItem(String identifier, Priority priority, UnaryOperation operation) {
+		this.identifier = identifier;
+		this.priority = priority;
+		this.operation = operation;
+	}
 
-    public UnaryOperation getOperation() {
-        return operation;
-    }
+	public UnaryOperation getOperation() {
+		return operation;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UnaryItem)) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof UnaryItem)) return false;
 
-        UnaryItem unaryItem = (UnaryItem) o;
+		UnaryItem unaryItem = (UnaryItem) o;
 
-        if (!identifier.equals(unaryItem.identifier)) return false;
-        return priority == unaryItem.priority;
-    }
+		if (!identifier.equals(unaryItem.identifier)) return false;
+		return priority == unaryItem.priority;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = identifier.hashCode();
-        result = 31 * result + priority.hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = identifier.hashCode();
+		result = 31 * result + priority.hashCode();
+		return result;
+	}
 }

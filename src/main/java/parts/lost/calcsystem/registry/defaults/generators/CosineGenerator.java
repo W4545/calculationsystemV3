@@ -8,7 +8,7 @@ import parts.lost.calcsystem.types.operations.GenOperation;
 import parts.lost.calcsystem.types.operations.defaults.CosineGenOperation;
 
 public class CosineGenerator extends GeneratorItem {
-    public CosineGenerator() {
-        super("cos", 1, CosineGenOperation.COSINE_GEN_OPERATION);
-    }
+	public CosineGenerator() {
+		super("cos", 1, CosineGenOperation.COSINE_GEN_OPERATION);
+	}
 }

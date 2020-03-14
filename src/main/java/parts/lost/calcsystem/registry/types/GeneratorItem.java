@@ -8,30 +8,30 @@ import parts.lost.calcsystem.types.operations.GenOperation;
 
 public class GeneratorItem extends Item {
 
-    private GenOperation operation;
-    private int argumentCount;
+	private GenOperation operation;
+	private int argumentCount;
 
-    public GeneratorItem(String identifier, int argumentCount, GenOperation operation) {
-        this.identifier = identifier;
-        this.priority = Priority.ONE;
-        this.operation = operation;
-        this.argumentCount = argumentCount;
-    }
+	public GeneratorItem(String identifier, int argumentCount, GenOperation operation) {
+		this.identifier = identifier;
+		this.priority = Priority.ONE;
+		this.operation = operation;
+		this.argumentCount = argumentCount;
+	}
 
-    public GenOperation getOperation() {
-        return operation;
-    }
+	public GenOperation getOperation() {
+		return operation;
+	}
 
-    public int getArgumentCount() {
-        return argumentCount;
-    }
+	public int getArgumentCount() {
+		return argumentCount;
+	}
 
-    @Override
-    public String toString() {
-        return "GeneratorItem{" +
-                "argumentCount=" + argumentCount +
-                ", identifier='" + identifier + '\'' +
-                ", priority=" + priority +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "GeneratorItem{" +
+				"argumentCount=" + argumentCount +
+				", identifier='" + identifier + '\'' +
+				", priority=" + priority +
+				'}';
+	}
 }

@@ -7,28 +7,28 @@ package parts.lost.calcsystem;
  * @since 0.0
  */
 public enum Priority {
-    /**
-     * Reserved for ordinary numbers and generators
-     */
-    ONE,
-    TWO,
-    /**
-     * Reserved for operators that execute on the same level as addition and subtraction
-     */
-    THREE,
-    FOUR,
+	/**
+	 * Reserved for ordinary numbers and generators
+	 */
+	ONE,
+	TWO,
+	/**
+	 * Reserved for operators that execute on the same level as addition and subtraction
+	 */
+	THREE,
+	FOUR,
 
-    /**
-     * Reserved for operators that execute on the same level as multiplication and subtraction
-     */
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
+	/**
+	 * Reserved for operators that execute on the same level as multiplication and subtraction
+	 */
+	FIVE,
+	SIX,
+	SEVEN,
+	EIGHT,
 
-    /**
-     * Reserved for unary operators that execute on the same level as negation
-     */
-    NINE,
-    TEN
+	/**
+	 * Reserved for unary operators that execute on the same level as negation
+	 */
+	NINE,
+	TEN
 }

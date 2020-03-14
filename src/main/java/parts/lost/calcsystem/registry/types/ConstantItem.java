@@ -4,18 +4,19 @@ package parts.lost.calcsystem.registry.types;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.Priority;
+import parts.lost.calcsystem.types.Value;
 
 public class ConstantItem extends Item {
 
-    private Number value;
+    private Value value;
 
-    public ConstantItem(String identifier, Number value) {
+    public ConstantItem(String identifier, Value value) {
         this.identifier = identifier;
         this.priority = Priority.ONE;
         this.value = value;
     }
 
-    public Number getValue() {
+    public Value getValue() {
         return value;
     }
 }

@@ -46,6 +46,9 @@ public class Registry implements Iterable<Item> {
         add(Defaults.SUBTRACTION);
         add(Defaults.EXPONENT);
         add(Defaults.NEGATION);
+        add(Defaults.COSINE_GENERATOR);
+        add(Defaults.SINE_GENERATOR);
+        add(Defaults.PI);
     }
 
     public boolean add(OperatorItem item) {

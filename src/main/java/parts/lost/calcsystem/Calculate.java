@@ -4,6 +4,7 @@ package parts.lost.calcsystem;
 // Date: 10/8/2019
 
 import parts.lost.calcsystem.registry.*;
+import parts.lost.calcsystem.registry.types.ConstantItem;
 import parts.lost.calcsystem.registry.types.GeneratorItem;
 import parts.lost.calcsystem.registry.types.OperatorItem;
 import parts.lost.calcsystem.types.Generator;
@@ -124,7 +125,7 @@ public class Calculate {
         Stack<Flag> stack = new Stack<>();
 
         for (Flag flag : flags) {
-            if (flag.isNumber() || flag.isGenerator())
+            if (flag.isNumber() || flag.isGenerator() || flag.isConstant())
                 output.add(flag);
             else if (flag.isOperator()) {
                 while (!stack.empty() && stack.peek().isOperator() &&
@@ -151,25 +152,27 @@ public class Calculate {
         for (Flag flag : postFix) {
             if (flag.isNumber() || flag.isGenerator()) {
                 stack.push((TreeType) flag.getObject());
+            } else if (flag.isConstant()) {
+                stack.push(((ConstantItem) flag.getObject()).getValue());
             } else if (flag.isOperator()) {
                 TreeType right = stack.pop();
                 TreeType left = stack.pop();
                 stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
             }
         }
+        if (stack.size() != 1)
+            throw new RuntimeException("Error building expression: extra flags found.");
         return stack.pop();
     }
 
     public Calculation interpolate(String string) {
 
         List<Flag> groups = parseStringRegex.parseStringRegex(string, registry);
-        //Flag[] flags = parseTypes(groups);
+
         Flag[] generatorPass = generatorParse(groups);
         Flag[] postFix = infixToPostfix(generatorPass);
 
 
-        //System.out.println(groups);
-        //System.out.println(Arrays.toString(flags));
 
         return new Calculation(string, buildTree(postFix));
     }
@@ -180,7 +183,6 @@ public class Calculate {
 
     public static void main(String[] args) {
         Calculate calculate = new Calculate();
-        calculate.registry.add(new GeneratorItem("sin",1, value -> new Value(Math.sin(value[0].value().getDouble()))));
         calculate.registry.add(new GeneratorItem("max", -1, value -> {
             double max = value[0].value().getDouble();
             for (int i = 1; i < value.length; ++i) {

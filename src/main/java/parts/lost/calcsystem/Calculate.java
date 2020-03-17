@@ -218,6 +218,7 @@ public class Calculate {
 		calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
 		calculate.interpolate("4 * sin(4)");
 		calculate.interpolate("45*5");
+		System.out.println(calculate.calculate("+max(-3, -4)"));
 		System.out.println(	calculate.calculate("-5+-4*max(-4--3, -2)"));
 		Scanner scanner = new Scanner(System.in);
 

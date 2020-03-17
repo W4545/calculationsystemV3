@@ -61,6 +61,7 @@ public class Registry implements Iterable<Item> {
 		add(Defaults.SUBTRACTION);
 		add(Defaults.EXPONENT);
 		add(Defaults.NEGATION);
+		add(Defaults.POSITIVE);
 		add(Defaults.COSINE_GENERATOR);
 		add(Defaults.SINE_GENERATOR);
 		add(Defaults.PI);

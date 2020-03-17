@@ -46,6 +46,9 @@ public class Defaults {
 
 	public static final UnaryItem NEGATION = new UnaryItem("-", Priority.NINE, Value::negate);
 
+	public static final UnaryItem POSITIVE = new UnaryItem("+", Priority.NINE,
+			(value -> new Value(Math.abs(value.getDouble()))));
+
 	public static final GeneratorItem COSINE_GENERATOR = new CosineGenerator();
 
 	public static final GeneratorItem SINE_GENERATOR = new SineGenerator();

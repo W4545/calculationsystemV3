@@ -72,7 +72,7 @@ public class StringParser {
 	private void parseGeneratorOperator(Registry registry, List<Flag> groups, int pos, String output4) {
 		if (pos > 0) {
 			Flag previous = groups.get(pos - 1);
-			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator()) {
+			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator() || previous.isUnaryOperator()) {
 				for (UnaryItem item : registry.getUnaryOperators()) {
 					if (item.getIdentifier().equals(output4)) {
 						groups.add(new Flag(item));

@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'application'
 	id 'org.beryx.jlink' version '2.10.3'
+	id "com.github.hierynomus.license" version "0.15.0"
 }
 
 group 'parts.lost'
@@ -16,11 +17,15 @@ repositories {
 
 dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.12'
-	compile 'org.codehaus.mojo:license-maven-plugin:2.0.0'
 }
 
-task license {
+license {
+	header rootProject.file('HEADER')
+	strictCheck true
 
+	mapping {
+		java = "SLASHSTAR_STYLE"
+	}
 }
 
 jlink {

@@ -19,10 +19,8 @@ import parts.lost.calcsystem.registry.*;
 import parts.lost.calcsystem.registry.types.ConstantItem;
 import parts.lost.calcsystem.registry.types.GeneratorItem;
 import parts.lost.calcsystem.registry.types.OperatorItem;
-import parts.lost.calcsystem.types.Generator;
-import parts.lost.calcsystem.types.Value;
-import parts.lost.calcsystem.types.Operator;
-import parts.lost.calcsystem.types.TreeType;
+import parts.lost.calcsystem.registry.types.UnaryItem;
+import parts.lost.calcsystem.types.*;
 
 import java.util.*;
 
@@ -140,8 +138,13 @@ public class Calculate {
 			if (flag.isNumber() || flag.isGenerator() || flag.isConstant())
 				output.add(flag);
 			else if (flag.isOperator()) {
-				while (!stack.empty() && stack.peek().isOperator() &&
-						((OperatorItem) stack.peek().getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) {
+				while (!stack.empty() && ((stack.peek().isOperator() &&
+						((OperatorItem) stack.peek().getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) || stack.peek().isUnaryOperator())) {
+					output.add(stack.pop());
+				}
+				stack.push(flag);
+			} else if (flag.isUnaryOperator()) {
+				while (!stack.empty() && !stack.peek().isOperator()) {
 					output.add(stack.pop());
 				}
 				stack.push(flag);
@@ -170,6 +173,9 @@ public class Calculate {
 				TreeType right = stack.pop();
 				TreeType left = stack.pop();
 				stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
+			} else if (flag.isUnaryOperator()) {
+				TreeType one = stack.pop();
+				stack.push(new UnaryOperator(one, ((UnaryItem)flag.getObject()).getOperation()));
 			}
 		}
 		if (stack.size() != 1)
@@ -212,6 +218,7 @@ public class Calculate {
 		calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
 		calculate.interpolate("4 * sin(4)");
 		calculate.interpolate("45*5");
+		System.out.println(	calculate.calculate("-5+-4*max(-4--3, -2)"));
 		Scanner scanner = new Scanner(System.in);
 
 		while (true) {

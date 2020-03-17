@@ -18,6 +18,7 @@ package parts.lost.calcsystem;
 import parts.lost.calcsystem.registry.types.ConstantItem;
 import parts.lost.calcsystem.registry.types.GeneratorItem;
 import parts.lost.calcsystem.registry.types.OperatorItem;
+import parts.lost.calcsystem.registry.types.UnaryItem;
 import parts.lost.calcsystem.types.Generator;
 import parts.lost.calcsystem.types.Value;
 
@@ -59,6 +60,10 @@ public class Flag {
 
 	public boolean isConstant() {
 		return object instanceof ConstantItem;
+	}
+
+	public boolean isUnaryOperator() {
+		return object instanceof UnaryItem;
 	}
 
 	public Object getObject() {

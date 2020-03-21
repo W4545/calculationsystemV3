@@ -15,6 +15,8 @@
  */
 package parts.lost.calculationsystem.core;
 
+import parts.lost.calculationsystem.core.exceptions.CalculationExpressionFormatException;
+import parts.lost.calculationsystem.core.exceptions.CalculationGeneratorFormattingException;
 import parts.lost.calculationsystem.core.registry.Registry;
 import parts.lost.calculationsystem.core.registry.types.ConstantItem;
 import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
@@ -25,14 +27,13 @@ import parts.lost.calculationsystem.core.types.Operator;
 import parts.lost.calculationsystem.core.types.TreeType;
 import parts.lost.calculationsystem.core.types.UnaryOperator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Calculate {
 
 	private Registry registry;
 	private StringParser parseStringRegex;
+	private State state = null;
 
 
 	public Calculate() {
@@ -51,6 +52,11 @@ public class Calculate {
 
 	public void setRegistry(Registry registry) {
 		this.registry = registry;
+	}
+
+	protected void cleanUpAndThrow(RuntimeException ex) throws RuntimeException {
+		state = null;
+		throw ex;
 	}
 
 	protected TreeType[] buildGenerator(List<Flag> list) {
@@ -90,17 +96,17 @@ public class Calculate {
 	private void genSetup(List<Flag> list, List<Flag> build, int i, TreeType[] genTrees) {
 		GeneratorItem item = (GeneratorItem) list.get(i).getObject();
 		if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
-			throw new RuntimeException("Incorrect number of arguments passed to generator: " + item.getIdentifier());
+			cleanUpAndThrow(new CalculationGeneratorFormattingException(String.format("Incorrect number of arguments passed to generator \"%s\"", item.getIdentifier())));
 		build.add(new Flag(new Generator(genTrees, item.getOperation())));
 	}
 
 	protected int[] outerParenthesis(List<Flag> flags, int start) {
-		int openParenthesisPos;
+		int openParenthesisPos = -1;
 		int closedParenthesisPos = -1;
 		if (start + 1 != flags.size() && flags.get(start).isOpenParentheses())
 			openParenthesisPos = start;
 		else
-			throw new RuntimeException("Incorrect Generator formatting: \"(\" expected");
+			cleanUpAndThrow(new CalculationGeneratorFormattingException("missing an opening \"(\""));
 		int openParenthesesEncountered = 0;
 		for (int k = start + 1; k < flags.size(); k++) {
 			if (flags.get(k).isOpenParentheses())
@@ -114,7 +120,7 @@ public class Calculate {
 		}
 
 		if (closedParenthesisPos == -1)
-			throw new RuntimeException("Invalid formatting: missing a closing parenthesis \")\"");
+			cleanUpAndThrow(new CalculationGeneratorFormattingException("missing an opening \")\""));
 
 		return new int[] {openParenthesisPos, closedParenthesisPos};
 	}
@@ -136,7 +142,7 @@ public class Calculate {
 
 
 		} catch (IndexOutOfBoundsException ex) {
-			throw new RuntimeException("Incorrect Generator formatting", ex);
+			cleanUpAndThrow(new CalculationExpressionFormatException(state, ex));
 		}
 
 		return list.toArray(new Flag[0]);
@@ -145,66 +151,71 @@ public class Calculate {
 	protected Flag[] infixToPostfix(Flag[] flags) {
 		List<Flag> output = new ArrayList<>(flags.length);
 
-		Stack<Flag> stack = new Stack<>();
+		ArrayDeque<Flag> stack = new ArrayDeque<>();
 
 		for (Flag flag : flags) {
 			if (flag.isNumber() || flag.isGenerator() || flag.isConstant())
 				output.add(flag);
 			else if (flag.isOperator()) {
-				while (!stack.empty() && ((stack.peek().isOperator() &&
-						((OperatorItem) stack.peek().getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) || stack.peek().isUnaryOperator())) {
+				while (!stack.isEmpty() && ((stack.peek().isOperator() &&
+						((OperatorItem) Objects.requireNonNull(stack.peek()).getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) || Objects.requireNonNull(stack.peek()).isUnaryOperator())) {
 					output.add(stack.pop());
 				}
 				stack.push(flag);
 			} else if (flag.isUnaryOperator()) {
-				while (!stack.empty() && !stack.peek().isOperator()) {
+				while (!stack.isEmpty() && !stack.peek().isOperator()) {
 					output.add(stack.pop());
 				}
 				stack.push(flag);
 			} else if (flag.isOpenParentheses()) {
 				stack.push(flag);
-			} else if (!stack.empty() && flag.isCloseParentheses()) {
-				while (!stack.empty() && !stack.peek().isOpenParentheses())
+			} else if (!stack.isEmpty() && flag.isCloseParentheses()) {
+				while (!stack.isEmpty() && !stack.peek().isOpenParentheses())
 					output.add(stack.pop());
 				stack.pop();
 			}
 		}
-		while (!stack.empty())
+		while (!stack.isEmpty())
 			output.add(stack.pop());
 
 		return output.toArray(new Flag[0]);
 	}
 
 	protected TreeType buildTree(Flag[] postFix) {
-		Stack<TreeType> stack = new Stack<>();
-		for (Flag flag : postFix) {
-			if (flag.isNumber() || flag.isGenerator()) {
-				stack.push((TreeType) flag.getObject());
-			} else if (flag.isConstant()) {
-				stack.push(((ConstantItem) flag.getObject()).getValue());
-			} else if (flag.isOperator()) {
-				TreeType right = stack.pop();
-				TreeType left = stack.pop();
-				stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
-			} else if (flag.isUnaryOperator()) {
-				TreeType one = stack.pop();
-				stack.push(new UnaryOperator(one, ((UnaryItem)flag.getObject()).getOperation()));
+		ArrayDeque<TreeType> stack = new ArrayDeque<>();
+		try {
+			for (Flag flag : postFix) {
+				if (flag.isNumber() || flag.isGenerator()) {
+					stack.push((TreeType) flag.getObject());
+				} else if (flag.isConstant()) {
+					stack.push(((ConstantItem) flag.getObject()).getValue());
+				} else if (flag.isOperator()) {
+					TreeType right = stack.pop();
+					TreeType left = stack.pop();
+					stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
+				} else if (flag.isUnaryOperator()) {
+					TreeType one = stack.pop();
+					stack.push(new UnaryOperator(one, ((UnaryItem)flag.getObject()).getOperation()));
+				}
 			}
+
+		} catch (NoSuchElementException | NullPointerException ex) {
+			cleanUpAndThrow(new CalculationExpressionFormatException(state, ex));
 		}
 		if (stack.size() != 1)
-			throw new RuntimeException("Error building expression: extra flags found.");
+			cleanUpAndThrow(new CalculationExpressionFormatException(state));
 		return stack.pop();
 	}
 
 	public Calculation interpolate(String string) {
-
+		state = new State(string);
 		List<Flag> groups = parseStringRegex.parseStringRegex(string, registry);
 
 		Flag[] generatorPass = generatorParse(groups);
 		Flag[] postFix = infixToPostfix(generatorPass);
 
 
-
+		state = null;
 		return new Calculation(string, buildTree(postFix));
 	}
 

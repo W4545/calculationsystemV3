@@ -50,7 +50,7 @@ public class App {
 
 		while (true) {
 			try {
-				System.out.print("Enter equation: ");
+				System.out.print("Enter equation (Enter q to quit): ");
 				String line = scanner.nextLine();
 
 				if (line.toLowerCase().equals("q"))

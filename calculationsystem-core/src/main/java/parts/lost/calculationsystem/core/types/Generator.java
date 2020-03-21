@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Name: Jack Young
-// Date: 10/8/2019
-module parts.lost.calculationsystem.core {
+package parts.lost.calculationsystem.core.types;
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+import parts.lost.calculationsystem.core.types.operations.GenOperation;
+
+public class Generator implements TreeType {
+
+	private TreeType[] array;
+	private GenOperation operation;
+
+	public Generator(TreeType[] array, GenOperation operation) {
+		this.array = array;
+		this.operation = operation;
+	}
+
+	@Override
+	public Value value() {
+		Value[] resolvedArray = new Value[array.length];
+
+		for (int i = 0; i < array.length; i++)
+			resolvedArray[i] = array[i].value();
+
+		return operation.operation(resolvedArray);
+	}
 }

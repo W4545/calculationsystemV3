@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package parts.lost.calculationsystem.core.registry.types;
+
 // Name: Jack Young
 // Date: 10/8/2019
-module parts.lost.calculationsystem.core {
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+import parts.lost.calculationsystem.core.Priority;
+import parts.lost.calculationsystem.core.types.Value;
+
+public class ConstantItem extends Item {
+
+	private Value value;
+
+	public ConstantItem(String identifier, Value value) {
+		this.identifier = identifier;
+		this.priority = Priority.ONE;
+		this.value = value;
+	}
+
+	public Value getValue() {
+		return value;
+	}
 }

@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Name: Jack Young
-// Date: 10/8/2019
-module parts.lost.calculationsystem.core {
+package parts.lost.calculationsystem.core.types.operations;
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+import parts.lost.calculationsystem.core.types.Value;
+
+public interface Operation {
+
+	Value operation(Value left, Value right);
 }

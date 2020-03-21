@@ -13,15 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package parts.lost.calculationsystem.core;
+
 // Name: Jack Young
 // Date: 10/8/2019
-module parts.lost.calculationsystem.core {
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+import parts.lost.calculationsystem.core.types.Value;
+import parts.lost.calculationsystem.core.types.TreeType;
+
+public class Calculation {
+
+	private TreeType tree;
+	private String representation;
+	private Value value;
+
+	Calculation(String representation, TreeType tree) {
+		this.representation = representation;
+		this.tree = tree;
+		this.value = null;
+	}
+
+	public String getCalculation() {
+		return representation;
+	}
+
+	public Value solve() {
+		if (value == null)
+			value = tree.value();
+		return value;
+	}
 }

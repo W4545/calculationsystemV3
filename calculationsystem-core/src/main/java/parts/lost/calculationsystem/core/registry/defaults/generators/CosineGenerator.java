@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Name: Jack Young
-// Date: 10/8/2019
-module parts.lost.calculationsystem.core {
+package parts.lost.calculationsystem.core.registry.defaults.generators;
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+// Name: Jack Young
+// Date: 3/13/2020
+
+import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
+import parts.lost.calculationsystem.core.types.operations.GenOperation;
+import parts.lost.calculationsystem.core.types.operations.defaults.CosineGenOperation;
+
+public class CosineGenerator extends GeneratorItem {
+	public CosineGenerator() {
+		super("cos", 1, CosineGenOperation.COSINE_GEN_OPERATION);
+	}
 }

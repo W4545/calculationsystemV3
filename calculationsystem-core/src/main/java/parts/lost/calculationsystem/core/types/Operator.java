@@ -13,15 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Name: Jack Young
-// Date: 10/8/2019
-module parts.lost.calculationsystem.core {
+package parts.lost.calculationsystem.core.types;
 
-	exports parts.lost.calculationsystem.core;
-	exports parts.lost.calculationsystem.core.registry;
-	exports parts.lost.calculationsystem.core.registry.types;
-	exports parts.lost.calculationsystem.core.registry.defaults.generators;
-	exports parts.lost.calculationsystem.core.types;
-	exports parts.lost.calculationsystem.core.types.operations;
-	exports parts.lost.calculationsystem.core.types.operations.defaults;
+import parts.lost.calculationsystem.core.types.operations.Operation;
+
+public class Operator implements TreeType {
+
+	private TreeType left, right;
+	private Operation operation;
+
+	public Operator(TreeType left, TreeType right, Operation operation) {
+		this.left = left;
+		this.right = right;
+		this.operation = operation;
+	}
+
+	@Override
+	public Value value() {
+		return operation.operation(left.value(), right.value());
+	}
+
+	@Override
+	public String toString() {
+		return "" + left + "OP" + right;
+	}
 }

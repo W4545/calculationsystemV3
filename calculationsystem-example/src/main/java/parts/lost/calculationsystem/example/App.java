@@ -18,9 +18,9 @@ package parts.lost.calculationsystem.example;
 // Name: Jack Young
 // Date: 3/21/2020
 
-import parts.lost.calcsystem.Calculate;
-import parts.lost.calcsystem.registry.types.GeneratorItem;
-import parts.lost.calcsystem.types.Value;
+import parts.lost.calculationsystem.core.Calculate;
+import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
+import parts.lost.calculationsystem.core.types.Value;
 
 import java.util.Scanner;
 

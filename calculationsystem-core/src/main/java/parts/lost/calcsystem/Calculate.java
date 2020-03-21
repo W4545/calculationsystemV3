@@ -40,6 +40,14 @@ public class Calculate {
 		parseStringRegex = new StringParser();
 	}
 
+	public Registry getRegistry() {
+		return registry;
+	}
+
+	public void setRegistry(Registry registry) {
+		this.registry = registry;
+	}
+
 	protected TreeType[] buildGenerator(List<Flag> list) {
 		List<TreeType> toOutput = new ArrayList<>();
 		List<Flag> build = new ArrayList<>();
@@ -197,48 +205,5 @@ public class Calculate {
 
 	public double calculate(String string) {
 		return interpolate(string).solve().getDouble();
-	}
-
-	public static void main(String[] args) {
-		Calculate calculate = new Calculate();
-		calculate.registry.add(new GeneratorItem("max", -1, value -> {
-			double max = value[0].value().getDouble();
-			for (int i = 1; i < value.length; ++i) {
-				double current = value[i].value().getDouble();
-				if (current > max) {
-					max = current;
-				}
-			}
-			return new Value(max);
-		}));
-
-
-		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
-		//System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
-		calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
-		calculate.interpolate("4 * sin(4)");
-		calculate.interpolate("45*5");
-		System.out.println(calculate.calculate("+max(-3, -4)"));
-		System.out.println(	calculate.calculate("-5+-4*max(-4--3, -2)"));
-		Scanner scanner = new Scanner(System.in);
-
-		while (true) {
-			try {
-				System.out.print("Enter equation: ");
-				String line = scanner.nextLine();
-
-				if (line.toLowerCase().equals("q"))
-					break;
-
-				long time = System.nanoTime();
-				double value = calculate.calculate(line);
-				long end = System.nanoTime();
-				System.out.println("Value: " + value);
-				System.out.println("Runtime: " + ((end - time) / 1000000.0) + "ms");
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 }

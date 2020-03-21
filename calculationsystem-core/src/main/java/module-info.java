@@ -15,7 +15,7 @@
  */
 // Name: Jack Young
 // Date: 10/8/2019
-module parts.lost.CalculationSystem {
+module parts.lost.calculationsystem.core {
 
 	exports parts.lost.calcsystem;
 	exports parts.lost.calcsystem.registry;

@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+}
+
+group 'parts.lost'
+version '0.5.0'
+sourceCompatibility = 11
+
+ext.moduleName = 'parts.lost.calculationsystem.core'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+

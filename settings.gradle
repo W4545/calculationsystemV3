@@ -1,2 +1,4 @@
 rootProject.name = 'calculationsystem'
+include 'calculationsystem-core'
+include 'calculationsystem-example'
 

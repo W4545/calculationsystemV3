@@ -16,3 +16,28 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'CalculationSystem'
+                description = 'A library that converts strings to an expression that can be evaluated'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'jacky'
+                        name = 'Jack Young'
+                        email = 'jackyoung@lost.parts'
+                    }
+                }
+            }
+        }
+    }
+}

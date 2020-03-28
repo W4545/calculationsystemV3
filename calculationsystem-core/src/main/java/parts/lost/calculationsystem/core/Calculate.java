@@ -32,18 +32,28 @@ import java.util.*;
 public class Calculate {
 
 	private Registry registry;
-	private StringParser parseStringRegex;
+	private Parser parser;
 	private State state = null;
 
 
 	public Calculate() {
 		registry = new Registry();
-		parseStringRegex = new StringParser();
+		parser = new RegexParser();
 	}
 
 	public Calculate(Registry registry) {
 		this.registry = registry;
-		parseStringRegex = new StringParser();
+		parser = new RegexParser();
+	}
+
+	public Calculate(Parser parser) {
+		this.parser = parser;
+		registry = new Registry();
+	}
+
+	public Calculate(Registry registry, Parser parser) {
+		this.registry = registry;
+		this.parser = parser;
 	}
 
 	public Registry getRegistry() {
@@ -52,6 +62,14 @@ public class Calculate {
 
 	public void setRegistry(Registry registry) {
 		this.registry = registry;
+	}
+
+	public Parser getParser() {
+		return parser;
+	}
+
+	public void setParser(Parser parser) {
+		this.parser = parser;
 	}
 
 	protected void cleanUpAndThrow(RuntimeException ex) throws RuntimeException {
@@ -211,7 +229,7 @@ public class Calculate {
 
 	public Calculation interpolate(String string) {
 		state = new State(string);
-		List<Flag> groups = parseStringRegex.parseStringRegex(string, registry);
+		List<Flag> groups = parser.parse(string, registry);
 
 		Flag[] generatorPass = generatorParse(groups);
 		Flag[] postFix = infixToPostfix(generatorPass);

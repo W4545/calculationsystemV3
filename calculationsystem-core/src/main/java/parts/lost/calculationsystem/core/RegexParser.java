@@ -24,19 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class StringParser {
+public class RegexParser implements Parser {
 
 	// private String oldreg = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([a-zA-Z]+)|([*+\\-/%^])|([(])|([)])";
 	// private String oldreg2 = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)";
 
 	private Pattern pattern;
 
-	public StringParser() {
+	public RegexParser() {
 		pattern = Pattern.compile("(\\d+(?:[.]\\d*)?|[.]\\d+)|([*+\\-/%^])|([(),])|([^\\d()*+\\-/%^,.\\s]+)");
 
 	}
 
-	protected List<Flag> parseStringRegex(String string, Registry registry) {
+	public List<Flag> parse(String string, Registry registry) {
 		var matcher = pattern.matcher(string);
 
 		List<Flag> groups = new ArrayList<>();
@@ -69,7 +69,7 @@ public class StringParser {
 		return groups;
 	}
 
-	private void parseGeneratorOperator(Registry registry, List<Flag> groups, int pos, String output4) {
+	protected void parseGeneratorOperator(Registry registry, List<Flag> groups, int pos, String output4) {
 		if (pos > 0) {
 			Flag previous = groups.get(pos - 1);
 			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator() || previous.isUnaryOperator()) {

@@ -59,13 +59,13 @@ public class Calculate {
 		throw ex;
 	}
 
-	protected TreeType[] buildGenerator(List<Flag> list) {
+	protected List<TreeType> buildGenerator(List<Flag> list) {
 		List<TreeType> toOutput = new ArrayList<>();
 		List<Flag> build = new ArrayList<>();
 		for (int i = 0; i < list.size(); ++i) {
 			if (list.get(i).isGeneratorItem()) {
 				int[] pos = outerParenthesis(list, i + 1);
-				TreeType[] genTrees = buildGenerator(list.subList(pos[0], pos[1]));
+				List<TreeType> genTrees = buildGenerator(list.subList(pos[0], pos[1]));
 				genSetup(list, build, i, genTrees);
 				i = pos[1];
 			} else if (list.get(i).isComma()) {
@@ -83,7 +83,7 @@ public class Calculate {
 			toOutput.add(buildTree(postfix));
 		}
 
-		return toOutput.toArray(new TreeType[0]);
+		return toOutput;
 	}
 
 	/**
@@ -93,11 +93,11 @@ public class Calculate {
 	 * @param i Position of GeneratorItem Flag in list
 	 * @param genTrees An array of the expressions inside the generator (expressions are represented as {@link TreeType})
 	 */
-	private void genSetup(List<Flag> list, List<Flag> build, int i, TreeType[] genTrees) {
+	private void genSetup(List<Flag> list, List<Flag> build, int i, List<TreeType> genTrees) {
 		GeneratorItem item = (GeneratorItem) list.get(i).getObject();
-		if (item.getArgumentCount() != -1 && genTrees.length != item.getArgumentCount())
+		if (item.getArgumentCount() != -1 && genTrees.size() != item.getArgumentCount())
 			cleanUpAndThrow(new CalculationGeneratorFormattingException(String.format("Incorrect number of arguments passed to generator \"%s\"", item.getIdentifier())));
-		build.add(new Flag(new Generator(genTrees, item.getOperation())));
+		build.add(new Flag(new Generator(genTrees.toArray(new TreeType[0]), item.getOperation())));
 	}
 
 	protected int[] outerParenthesis(List<Flag> flags, int start) {
@@ -131,7 +131,7 @@ public class Calculate {
 			for (int i = 0; i < flags.size(); i++) {
 				if (flags.get(i).isGeneratorItem()) {
 					int[] pos = outerParenthesis(flags, i + 1);
-					TreeType[] genTrees = buildGenerator(flags.subList(pos[0] + 1, pos[1]));
+					List<TreeType> genTrees = buildGenerator(flags.subList(pos[0] + 1, pos[1]));
 					genSetup(flags, list, i, genTrees);
 					i = pos[1];
 				}
@@ -149,36 +149,38 @@ public class Calculate {
 	}
 
 	protected Flag[] infixToPostfix(Flag[] flags) {
-		List<Flag> output = new ArrayList<>(flags.length);
+		Flag[] output = new Flag[flags.length];
 
 		ArrayDeque<Flag> stack = new ArrayDeque<>();
-
+		int pos = 0;
 		for (Flag flag : flags) {
 			if (flag.isNumber() || flag.isGenerator() || flag.isConstant())
-				output.add(flag);
+				output[pos++] = flag;
 			else if (flag.isOperator()) {
 				while (!stack.isEmpty() && ((stack.peek().isOperator() &&
 						((OperatorItem) Objects.requireNonNull(stack.peek()).getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) || Objects.requireNonNull(stack.peek()).isUnaryOperator())) {
-					output.add(stack.pop());
+					output[pos++] = stack.pop();
 				}
 				stack.push(flag);
 			} else if (flag.isUnaryOperator()) {
 				while (!stack.isEmpty() && !stack.peek().isOperator()) {
-					output.add(stack.pop());
+					output[pos++] = stack.pop();
 				}
 				stack.push(flag);
 			} else if (flag.isOpenParentheses()) {
 				stack.push(flag);
 			} else if (!stack.isEmpty() && flag.isCloseParentheses()) {
 				while (!stack.isEmpty() && !stack.peek().isOpenParentheses())
-					output.add(stack.pop());
+					output[pos++] = stack.pop();
 				stack.pop();
+			} else {
+				cleanUpAndThrow(new CalculationExpressionFormatException(state));
 			}
 		}
 		while (!stack.isEmpty())
-			output.add(stack.pop());
+			output[pos++] = stack.pop();
 
-		return output.toArray(new Flag[0]);
+		return output;
 	}
 
 	protected TreeType buildTree(Flag[] postFix) {

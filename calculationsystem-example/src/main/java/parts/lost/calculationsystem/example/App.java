@@ -38,9 +38,9 @@ public class App {
 		}
 	}
 
-	private static class MaxGeneratorItem extends GeneratorItem implements Moddable<InvertMode, Boolean> {
+	private static class MaxGeneratorItem extends GeneratorItem implements Moddable<Boolean> {
 
-		private InvertMode mode = null;
+		private Mode<Boolean> mode = null;
 
 		private static final GenOperation max = values -> {
 			double max = values[0].value().getDouble();
@@ -69,7 +69,7 @@ public class App {
 		}
 
 		@Override
-		public void setMode(InvertMode mode) {
+		public void setMode(Mode<Boolean> mode) {
 			this.mode = mode;
 		}
 
@@ -86,7 +86,7 @@ public class App {
 		Calculate calculate = new Calculate();
 		MaxGeneratorItem maxGeneratorItem = new MaxGeneratorItem();
 		calculate.getRegistry().add(maxGeneratorItem);
-		InvertMode invertMode = new InvertMode(true);
+		InvertMode invertMode = new InvertMode(false);
 		maxGeneratorItem.setMode(invertMode);
 
 		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));

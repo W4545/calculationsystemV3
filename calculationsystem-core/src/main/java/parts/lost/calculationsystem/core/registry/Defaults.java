@@ -19,9 +19,7 @@ package parts.lost.calculationsystem.core.registry;
 // Date: 10/8/2019
 
 import parts.lost.calculationsystem.core.Priority;
-import parts.lost.calculationsystem.core.registry.defaults.generators.CosineGeneratorItem;
-import parts.lost.calculationsystem.core.registry.defaults.generators.SineGeneratorItem;
-import parts.lost.calculationsystem.core.registry.defaults.generators.SqrtGeneratorItem;
+import parts.lost.calculationsystem.core.registry.defaults.generators.*;
 import parts.lost.calculationsystem.core.registry.defaults.modes.RadiansDegreesMode;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
 import parts.lost.calculationsystem.core.registry.types.ConstantItem;
@@ -55,7 +53,11 @@ public final class Defaults {
 
 	public static final CosineGeneratorItem COSINE_GENERATOR_ITEM = new CosineGeneratorItem();
 
+	public static final ArcCosineGeneratorItem ARC_COSINE_GENERATOR_ITEM = new ArcCosineGeneratorItem();
+
 	public static final SineGeneratorItem SINE_GENERATOR_ITEM = new SineGeneratorItem();
+
+	public static final ArcSineGeneratorItem ARC_SINE_GENERATOR_ITEM = new ArcSineGeneratorItem();
 
 	public static final SqrtGeneratorItem SQRT_GENERATOR_ITEM = new SqrtGeneratorItem();
 
@@ -64,6 +66,8 @@ public final class Defaults {
 	static {
 		COSINE_GENERATOR_ITEM.setMode(RADIANS_DEGREES_MODE);
 		SINE_GENERATOR_ITEM.setMode(RADIANS_DEGREES_MODE);
+		ARC_COSINE_GENERATOR_ITEM.setMode(RADIANS_DEGREES_MODE);
+		ARC_SINE_GENERATOR_ITEM.setMode(RADIANS_DEGREES_MODE);
 	}
 
 	public static void load_defaults(Registry registry) {
@@ -75,7 +79,9 @@ public final class Defaults {
 		registry.add(NEGATION);
 		registry.add(POSITIVE);
 		registry.add(COSINE_GENERATOR_ITEM);
+		registry.add(ARC_COSINE_GENERATOR_ITEM);
 		registry.add(SINE_GENERATOR_ITEM);
+		registry.add(ARC_SINE_GENERATOR_ITEM);
 		registry.add(PI);
 		registry.add(SQRT_GENERATOR_ITEM);
 	}

@@ -15,7 +15,7 @@
  */
 package parts.lost.calculationsystem.core.registry;
 
-public interface Moddable<T extends Mode<E>, E> {
+public interface Moddable<T> {
 
-    void setMode(T mode);
+    void setMode(Mode<T> mode);
 }

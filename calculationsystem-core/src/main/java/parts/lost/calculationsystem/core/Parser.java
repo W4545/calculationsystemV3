@@ -20,5 +20,5 @@ import parts.lost.calculationsystem.core.registry.Registry;
 import java.util.List;
 
 public interface Parser {
-    List<Flag> parse(String expression, Registry registry);
+    List<Flag> parse(String expression, Registry registry, State state);
 }

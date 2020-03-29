@@ -229,7 +229,7 @@ public class Calculate {
 
 	public Calculation interpolate(String string) {
 		state = new State(string);
-		List<Flag> groups = parser.parse(string, registry);
+		List<Flag> groups = parser.parse(string, registry, state);
 
 		Flag[] generatorPass = generatorParse(groups);
 		Flag[] postFix = infixToPostfix(generatorPass);

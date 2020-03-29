@@ -19,8 +19,7 @@ package parts.lost.calculationsystem.example;
 // Date: 3/21/2020
 
 import parts.lost.calculationsystem.core.Calculate;
-import parts.lost.calculationsystem.core.registry.defaults.modes.RadiansDegreesMode;
-import parts.lost.calculationsystem.core.registry.defaults.modes.TestRadians;
+import parts.lost.calculationsystem.core.registry.Defaults;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
 import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
 import parts.lost.calculationsystem.core.types.Value;
@@ -45,9 +44,8 @@ public class App {
 		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
 		//System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
 
-		//RadiansDegreesMode mode = new RadiansDegreesMode(RD.DEGREES);
-		TestRadians mode = new TestRadians(RD.DEGREES);
-		calculate.getRegistry().add(mode);
+		Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
+
 		calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
 		calculate.interpolate("4 * sin(4)");
 		calculate.interpolate("45*5");
@@ -55,13 +53,22 @@ public class App {
 		System.out.println(	calculate.calculate("-5+-4*max(-4--3, -2)"));
 		Scanner scanner = new Scanner(System.in);
 
+		label:
 		while (true) {
 			try {
 				System.out.print("Enter equation (Enter q to quit): ");
 				String line = scanner.nextLine();
 
-				if (line.toLowerCase().equals("q"))
-					break;
+				switch (line.toLowerCase()) {
+					case "q":
+						break label;
+					case "$radians":
+						Defaults.RADIANS_DEGREES_MODE.setState(RD.RADIANS);
+						continue;
+					case "$degrees":
+						Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
+						continue;
+				}
 
 				long time = System.nanoTime();
 				double value = calculate.calculate(line);

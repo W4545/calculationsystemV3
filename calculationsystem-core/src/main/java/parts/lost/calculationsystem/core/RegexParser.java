@@ -15,6 +15,8 @@
  */
 package parts.lost.calculationsystem.core;
 
+import parts.lost.calculationsystem.core.exceptions.CalculationExpressionFormatException;
+import parts.lost.calculationsystem.core.exceptions.CalculationStringParsingException;
 import parts.lost.calculationsystem.core.registry.Registry;
 import parts.lost.calculationsystem.core.registry.types.Item;
 import parts.lost.calculationsystem.core.registry.types.UnaryItem;
@@ -36,7 +38,7 @@ public class RegexParser implements Parser {
 
 	}
 
-	public List<Flag> parse(String string, Registry registry) {
+	public List<Flag> parse(String string, Registry registry, State state) {
 		var matcher = pattern.matcher(string);
 
 		List<Flag> groups = new ArrayList<>();
@@ -53,28 +55,30 @@ public class RegexParser implements Parser {
 					groups.add(new Flag(new Value(Double.parseDouble(output1))));
 				} else if (output2 != null) {
 					// Matched an operator
-					parseGeneratorOperator(registry, groups, pos, output2);
+					parseGeneratorOperator(registry, state, groups, pos, output2);
 				} else if (output3 != null) // Found comma or parentheses
 					groups.add(new Flag(output3));
 				else if (output4 != null) {
 					// Found generator/operator
-					parseGeneratorOperator(registry, groups, pos, output4);
+					parseGeneratorOperator(registry, state, groups, pos, output4);
 				}
 				pos += 1;
 			}
-		} catch (StackOverflowError | NumberFormatException ex) {
-			throw new RuntimeException("Incorrect syntax in string.", ex);
+		} catch (NumberFormatException | IndexOutOfBoundsException ex) {
+			throw new CalculationExpressionFormatException(state, ex);
+		} catch (StackOverflowError ex) {
+			throw new CalculationExpressionFormatException(state);
 		}
 
 		return groups;
 	}
 
-	protected void parseGeneratorOperator(Registry registry, List<Flag> groups, int pos, String output4) {
+	protected void parseGeneratorOperator(Registry registry, State state, List<Flag> groups, int pos, String output) {
 		if (pos > 0) {
 			Flag previous = groups.get(pos - 1);
 			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator() || previous.isUnaryOperator()) {
 				for (UnaryItem item : registry.getUnaryOperators()) {
-					if (item.getIdentifier().equals(output4)) {
+					if (item.getIdentifier().equals(output)) {
 						groups.add(new Flag(item));
 						return;
 					}
@@ -82,17 +86,18 @@ public class RegexParser implements Parser {
 			}
 		} else if (pos == 0) {
 			for (UnaryItem item : registry.getUnaryOperators()) {
-				if (item.getIdentifier().equals(output4)) {
+				if (item.getIdentifier().equals(output)) {
 					groups.add(new Flag(item));
 					return;
 				}
 			}
 		}
 		for (Item item : registry) {
-			if (item.getIdentifier().equals(output4)) {
+			if (item.getIdentifier().equals(output)) {
 				groups.add(new Flag(item));
 				return;
 			}
 		}
+		throw new CalculationStringParsingException(state, output);
 	}
 }

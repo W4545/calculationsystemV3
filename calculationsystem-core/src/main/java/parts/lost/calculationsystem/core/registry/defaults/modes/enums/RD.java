@@ -13,21 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package parts.lost.calculationsystem.core.types.operations.defaults;
+package parts.lost.calculationsystem.core.registry.defaults.modes.enums;
 
-// Name: Jack Young
-// Date: 3/13/2020
-
-import parts.lost.calculationsystem.core.types.TreeType;
-import parts.lost.calculationsystem.core.types.Value;
-import parts.lost.calculationsystem.core.types.operations.GenOperation;
-
-public class CosineGenOperation implements GenOperation {
-
-	public final static CosineGenOperation COSINE_GEN_OPERATION = new CosineGenOperation();
-
-	@Override
-	public Value operation(TreeType[] array) {
-		return new Value(Math.cos(array[0].value().getDouble()));
-	}
+public enum RD {
+    RADIANS,
+    DEGREES
 }

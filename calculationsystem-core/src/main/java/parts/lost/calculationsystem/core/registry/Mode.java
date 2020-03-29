@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package parts.lost.calculationsystem.core.registry.defaults.generators;
+package parts.lost.calculationsystem.core.registry;
 
-// Name: Jack Young
-// Date: 3/13/2020
+public abstract class Mode<T> {
 
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
-import parts.lost.calculationsystem.core.types.operations.GenOperation;
-import parts.lost.calculationsystem.core.types.operations.defaults.CosineGenOperation;
+    private T currentState;
 
-public class CosineGenerator extends GeneratorItem {
-	public CosineGenerator() {
-		super("cos", 1, CosineGenOperation.COSINE_GEN_OPERATION);
-	}
+    protected Mode(T currentState) {
+        this.currentState = currentState;
+    }
+
+    public T getCurrentState() {
+        return currentState;
+    }
+
+    public void setState(T state) {
+        currentState = state;
+    }
 }

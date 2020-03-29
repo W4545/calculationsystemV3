@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package parts.lost.calculationsystem.core.registry.defaults.generators;
+package parts.lost.calculationsystem.core.registry.defaults.modes;
 
-// Name: Jack Young
-// Date: 3/13/2020
+import parts.lost.calculationsystem.core.registry.Mode;
+import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
 
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
-import parts.lost.calculationsystem.core.types.operations.defaults.SineGenOperation;
-
-public class SineGenerator extends GeneratorItem {
-	public SineGenerator() {
-		super("sin", 1, SineGenOperation.SINE_GEN_OPERATION);
-	}
+public class RadiansDegreesMode extends Mode<RD> {
+    public RadiansDegreesMode(RD currentState) {
+        super(currentState);
+    }
 }

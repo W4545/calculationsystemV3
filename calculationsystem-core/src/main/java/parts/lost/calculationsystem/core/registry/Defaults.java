@@ -19,8 +19,8 @@ package parts.lost.calculationsystem.core.registry;
 // Date: 10/8/2019
 
 import parts.lost.calculationsystem.core.Priority;
-import parts.lost.calculationsystem.core.registry.defaults.generators.CosineGenerator;
-import parts.lost.calculationsystem.core.registry.defaults.generators.SineGenerator;
+import parts.lost.calculationsystem.core.registry.defaults.generators.CosineGeneratorItem;
+import parts.lost.calculationsystem.core.registry.defaults.generators.SineGeneratorItem;
 import parts.lost.calculationsystem.core.registry.types.ConstantItem;
 import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
 import parts.lost.calculationsystem.core.registry.types.OperatorItem;
@@ -49,9 +49,9 @@ public class Defaults {
 	public static final UnaryItem POSITIVE = new UnaryItem("+", Priority.NINE,
 			(value -> new Value(Math.abs(value.getDouble()))));
 
-	public static final GeneratorItem COSINE_GENERATOR = new CosineGenerator();
+	public static final GeneratorItem COSINE_GENERATOR = new CosineGeneratorItem();
 
-	public static final GeneratorItem SINE_GENERATOR = new SineGenerator();
+	public static final GeneratorItem SINE_GENERATOR = new SineGeneratorItem();
 
 	public static final ConstantItem PI = new ConstantItem("pi", new Value(Math.PI));
 }

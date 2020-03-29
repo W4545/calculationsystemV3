@@ -72,30 +72,32 @@ public class Registry implements Iterable<Item> {
 	@SuppressWarnings("unchecked")
 	protected void modeLookup(Item item) {
 		if (modes.size() > 0 && item instanceof Moddable) {
-			Type[] generics = item.getClass().getGenericInterfaces();
-			if (generics.length == 0) {
-				Class<?> aClass = item.getClass().getSuperclass();
-				while (generics.length == 0) {
-					if (aClass == null)
-						throw new RuntimeException();
-					generics = aClass.getGenericInterfaces();
-					aClass = aClass.getSuperclass();
-				}
-
-			}
-
+			Class<?>  aClass = item.getClass();
 			Class<?> modeClass = null;
 			Class<?> typeClass = null;
-			for (Type type : generics) {
-				if (type instanceof ParameterizedType) {
-					ParameterizedType parameterizedType = (ParameterizedType) type;
-					if (parameterizedType.getRawType().equals(Moddable.class)) {
-						modeClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-						typeClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];
-						break;
+			Type[] generics = null;
+
+			while (modeClass == null && typeClass == null) {
+				if (aClass == null)
+					throw new RuntimeException();
+				generics = aClass.getGenericInterfaces();
+
+				for (Type type : generics) {
+					if (type instanceof ParameterizedType) {
+						ParameterizedType parameterizedType = (ParameterizedType) type;
+						if (parameterizedType.getRawType().equals(Moddable.class)) {
+							modeClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+							typeClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];
+							break;
+						}
 					}
 				}
+				aClass = aClass.getSuperclass();
 			}
+
+
+
+
 
 			for (Mode<?> mode : modes) {
 				Type currentModeClass = (mode.getClass().getGenericSuperclass());

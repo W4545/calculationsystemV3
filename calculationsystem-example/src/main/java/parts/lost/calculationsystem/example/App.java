@@ -20,26 +20,74 @@ package parts.lost.calculationsystem.example;
 
 import parts.lost.calculationsystem.core.Calculate;
 import parts.lost.calculationsystem.core.registry.Defaults;
+import parts.lost.calculationsystem.core.registry.Moddable;
+import parts.lost.calculationsystem.core.registry.Mode;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
 import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
 import parts.lost.calculationsystem.core.types.Value;
+import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
 import java.util.Scanner;
 
 public class App {
-	public static void main(String[] args) {
-		Calculate calculate = new Calculate();
-		calculate.getRegistry().add(new GeneratorItem("max", -1, value -> {
-			double max = value[0].value().getDouble();
-			for (int i = 1; i < value.length; ++i) {
-				double current = value[i].value().getDouble();
+
+	private static class InvertMode extends Mode<Boolean> {
+
+		protected InvertMode(Boolean currentState) {
+			super(currentState);
+		}
+	}
+
+	private static class MaxGeneratorItem extends GeneratorItem implements Moddable<InvertMode, Boolean> {
+
+		private InvertMode mode = null;
+
+		private static final GenOperation max = values -> {
+			double max = values[0].value().getDouble();
+			for (int i = 1; i < values.length; ++i) {
+				double current = values[i].value().getDouble();
 				if (current > max) {
 					max = current;
 				}
 			}
 			return new Value(max);
-		}));
+		};
 
+		private static final GenOperation inverted = values -> {
+			double min = values[0].value().getDouble();
+			for (int i = 1; i < values.length; i++) {
+				double current = values[i].value().getDouble();
+				if ( current < min)
+					min = current;
+			}
+
+			return new Value(min);
+		};
+
+		public MaxGeneratorItem() {
+			super("max", -1, max);
+		}
+
+		@Override
+		public void setMode(InvertMode mode) {
+			this.mode = mode;
+		}
+
+		@Override
+		public GenOperation getOperation() {
+			if (mode != null && mode.getCurrentState())
+				return inverted;
+			else
+				return max;
+		}
+	}
+
+	public static void main(String[] args) {
+		Calculate calculate = new Calculate();
+		MaxGeneratorItem maxGeneratorItem = new MaxGeneratorItem();
+		calculate.getRegistry().add(maxGeneratorItem);
+		InvertMode invertMode = new InvertMode(true);
+		maxGeneratorItem.setMode(invertMode);
 
 		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
 		//System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
@@ -67,6 +115,9 @@ public class App {
 						continue;
 					case "$degrees":
 						Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
+						continue;
+					case "$invert":
+						invertMode.setState(!invertMode.getCurrentState());
 						continue;
 				}
 

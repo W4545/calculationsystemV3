@@ -15,20 +15,17 @@
  */
 package parts.lost.calculationsystem.core.registry.defaults.generators;
 
-// Name: Jack Young
-// Date: 3/13/2020
-
 import parts.lost.calculationsystem.core.Conversions;
 import parts.lost.calculationsystem.core.types.Value;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
-public class SineGeneratorItem extends RDGeneratorItem {
+public class ArcCosineGeneratorTemplate extends RDGeneratorTemplate {
 
-	public static final GenOperation SINE_GEN_OPERATION_RADIAN = values -> new Value(Math.sin(values[0].value().getDouble()));
+    public static GenOperation COSINE_GEN_OPERATION_RADIANS = values -> new Value(Math.acos(values[0].value().getDouble()));
 
-	public static final GenOperation SINE_GEN_OPERATION_DEGREES = values -> new Value(Math.sin(Conversions.toRadians(values[0].value().getDouble())));
+    public static GenOperation COSINE_GEN_OPERATION_DEGREES = values -> new Value(Conversions.toDegrees(Math.acos(values[0].value().getDouble())));
 
-	public SineGeneratorItem() {
-		super("sin", 1, SINE_GEN_OPERATION_RADIAN, SINE_GEN_OPERATION_DEGREES);
-	}
+    public ArcCosineGeneratorTemplate() {
+        super("arccos", 1, COSINE_GEN_OPERATION_RADIANS, COSINE_GEN_OPERATION_DEGREES);
+    }
 }

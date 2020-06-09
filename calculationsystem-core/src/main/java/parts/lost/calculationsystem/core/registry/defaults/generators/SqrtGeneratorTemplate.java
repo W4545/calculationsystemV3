@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package parts.lost.calculationsystem.core.registry.types;
+package parts.lost.calculationsystem.core.registry.defaults.generators;
 
 // Name: Jack Young
-// Date: 10/8/2019
+// Date: 3/29/2020
 
-import parts.lost.calculationsystem.core.Priority;
+import parts.lost.calculationsystem.core.registry.types.GeneratorTemplate;
 import parts.lost.calculationsystem.core.types.Value;
+import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
-public class ConstantItem extends Item {
+public class SqrtGeneratorTemplate extends GeneratorTemplate {
 
-	private Value value;
+	public static final GenOperation SQRT_OPERATION = values -> new Value(Math.sqrt(values[0].value().getDouble()));
 
-	public ConstantItem(String identifier, Value value) {
-		this.identifier = identifier;
-		this.priority = Priority.ONE;
-		this.value = value;
-	}
-
-	public Value getValue() {
-		return value;
+	public SqrtGeneratorTemplate() {
+		super("sqrt", 1, SQRT_OPERATION);
 	}
 }

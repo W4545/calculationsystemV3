@@ -37,12 +37,12 @@ public class FlagTest {
         String open = "(";
         String closed = ")";
         String comma = ",";
-        Generator generator = new Generator(new TreeType[0], Defaults.COSINE_GENERATOR.getOperation());
+        Generator generator = new Generator(new TreeType[0], Defaults.COSINE_GENERATOR_ITEM.getOperation());
 
         return Arrays.asList(new Object[][] {
                 {new Flag(value), value, 1},
                 {new Flag(Defaults.ADDITION), Defaults.ADDITION, 2},
-                {new Flag(Defaults.COSINE_GENERATOR), Defaults.COSINE_GENERATOR, 3},
+                {new Flag(Defaults.COSINE_GENERATOR_ITEM), Defaults.COSINE_GENERATOR_ITEM, 3},
                 {new Flag(open), open, 4},
                 {new Flag(closed), closed, 5},
                 {new Flag(comma), comma, 6},

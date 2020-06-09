@@ -22,46 +22,46 @@ import parts.lost.calculationsystem.core.Priority;
 import parts.lost.calculationsystem.core.registry.defaults.generators.*;
 import parts.lost.calculationsystem.core.registry.defaults.modes.RadiansDegreesMode;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
-import parts.lost.calculationsystem.core.registry.types.ConstantItem;
-import parts.lost.calculationsystem.core.registry.types.OperatorItem;
-import parts.lost.calculationsystem.core.registry.types.UnaryItem;
+import parts.lost.calculationsystem.core.registry.types.ConstantTemplate;
+import parts.lost.calculationsystem.core.registry.types.OperatorTemplate;
+import parts.lost.calculationsystem.core.registry.types.UnaryTemplate;
 import parts.lost.calculationsystem.core.types.Value;
 
 public final class Defaults {
 
-	public static final OperatorItem ADDITION = new OperatorItem("+", Priority.THREE,
+	public static final OperatorTemplate ADDITION = new OperatorTemplate("+", Priority.THREE,
 			(left, right) -> new Value(left.getDouble() + right.getDouble()));
 
-	public static final OperatorItem SUBTRACTION = new OperatorItem("-", Priority.THREE,
+	public static final OperatorTemplate SUBTRACTION = new OperatorTemplate("-", Priority.THREE,
 			(left, right) -> new Value(left.getDouble() - right.getDouble()));
 
-	public static final OperatorItem MULTIPLICATION = new OperatorItem("*", Priority.FIVE,
+	public static final OperatorTemplate MULTIPLICATION = new OperatorTemplate("*", Priority.FIVE,
 			(left, right) -> new Value(left.getDouble() * right.getDouble()));
 
-	public static final OperatorItem DIVISION = new OperatorItem("/", Priority.FIVE,
+	public static final OperatorTemplate DIVISION = new OperatorTemplate("/", Priority.FIVE,
 			(left, right) -> new Value(left.getDouble()  / right.getDouble()));
 
-	public static final OperatorItem EXPONENT = new OperatorItem("^", Priority.SIX,
+	public static final OperatorTemplate EXPONENT = new OperatorTemplate("^", Priority.SIX,
 			(left, right) -> new Value(Math.pow(left.getDouble(), right.getDouble())));
 
-	public static final UnaryItem NEGATION = new UnaryItem("-", Priority.NINE, Value::negate);
+	public static final UnaryTemplate NEGATION = new UnaryTemplate("-", Priority.NINE, Value::negate);
 
-	public static final UnaryItem POSITIVE = new UnaryItem("+", Priority.NINE,
+	public static final UnaryTemplate POSITIVE = new UnaryTemplate("+", Priority.NINE,
 			(value -> new Value(Math.abs(value.getDouble()))));
 
 	public static final RadiansDegreesMode RADIANS_DEGREES_MODE = new RadiansDegreesMode(RD.RADIANS);
 
-	public static final CosineGeneratorItem COSINE_GENERATOR_ITEM = new CosineGeneratorItem();
+	public static final CosineGeneratorTemplate COSINE_GENERATOR_ITEM = new CosineGeneratorTemplate();
 
-	public static final ArcCosineGeneratorItem ARC_COSINE_GENERATOR_ITEM = new ArcCosineGeneratorItem();
+	public static final ArcCosineGeneratorTemplate ARC_COSINE_GENERATOR_ITEM = new ArcCosineGeneratorTemplate();
 
-	public static final SineGeneratorItem SINE_GENERATOR_ITEM = new SineGeneratorItem();
+	public static final SineGeneratorTemplate SINE_GENERATOR_ITEM = new SineGeneratorTemplate();
 
-	public static final ArcSineGeneratorItem ARC_SINE_GENERATOR_ITEM = new ArcSineGeneratorItem();
+	public static final ArcSineGeneratorTemplate ARC_SINE_GENERATOR_ITEM = new ArcSineGeneratorTemplate();
 
-	public static final SqrtGeneratorItem SQRT_GENERATOR_ITEM = new SqrtGeneratorItem();
+	public static final SqrtGeneratorTemplate SQRT_GENERATOR_ITEM = new SqrtGeneratorTemplate();
 
-	public static final ConstantItem PI = new ConstantItem("pi", new Value(Math.PI));
+	public static final ConstantTemplate PI = new ConstantTemplate("pi", new Value(Math.PI));
 
 	static {
 		COSINE_GENERATOR_ITEM.setMode(RADIANS_DEGREES_MODE);

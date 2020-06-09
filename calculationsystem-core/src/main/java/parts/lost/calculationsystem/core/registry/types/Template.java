@@ -20,11 +20,11 @@ package parts.lost.calculationsystem.core.registry.types;
 
 import parts.lost.calculationsystem.core.Priority;
 
-public abstract class Item {
+public abstract class Template {
 	protected String identifier;
 	protected Priority priority;
 
-	protected Item() {
+	protected Template() {
 
 	}
 
@@ -39,12 +39,12 @@ public abstract class Item {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Item)) return false;
+		if (!(o instanceof Template)) return false;
 
-		Item item = (Item) o;
+		Template template = (Template) o;
 
-		if (!identifier.equals(item.identifier)) return false;
-		return priority == item.priority;
+		if (!identifier.equals(template.identifier)) return false;
+		return priority == template.priority;
 	}
 
 	@Override

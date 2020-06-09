@@ -16,17 +16,19 @@
 package parts.lost.calculationsystem.core.registry.defaults.generators;
 
 // Name: Jack Young
-// Date: 3/29/2020
+// Date: 3/13/2020
 
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
+import parts.lost.calculationsystem.core.Conversions;
 import parts.lost.calculationsystem.core.types.Value;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
-public class SqrtGeneratorItem extends GeneratorItem {
+public class SineGeneratorTemplate extends RDGeneratorTemplate {
 
-	public static final GenOperation SQRT_OPERATION = values -> new Value(Math.sqrt(values[0].value().getDouble()));
+	public static final GenOperation SINE_GEN_OPERATION_RADIAN = values -> new Value(Math.sin(values[0].value().getDouble()));
 
-	public SqrtGeneratorItem() {
-		super("sqrt", 1, SQRT_OPERATION);
+	public static final GenOperation SINE_GEN_OPERATION_DEGREES = values -> new Value(Math.sin(Conversions.toRadians(values[0].value().getDouble())));
+
+	public SineGeneratorTemplate() {
+		super("sin", 1, SINE_GEN_OPERATION_RADIAN, SINE_GEN_OPERATION_DEGREES);
 	}
 }

@@ -19,8 +19,8 @@ import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
 public class Generator implements TreeType {
 
-	private TreeType[] array;
-	private GenOperation operation;
+	private final TreeType[] array;
+	private final GenOperation operation;
 
 	public Generator(TreeType[] array, GenOperation operation) {
 		this.array = array;

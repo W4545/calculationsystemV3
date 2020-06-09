@@ -23,8 +23,8 @@ import parts.lost.calculationsystem.core.types.TreeType;
 
 public class Calculation {
 
-	private TreeType tree;
-	private String representation;
+	private final TreeType tree;
+	private final String representation;
 	private Value value;
 
 	Calculation(String representation, TreeType tree) {

@@ -19,8 +19,9 @@ import parts.lost.calculationsystem.core.types.operations.Operation;
 
 public class Operator implements TreeType {
 
-	private TreeType left, right;
-	private Operation operation;
+	private final TreeType left;
+	private final TreeType right;
+	private final Operation operation;
 
 	public Operator(TreeType left, TreeType right, Operation operation) {
 		this.left = left;

@@ -18,10 +18,10 @@ package parts.lost.calculationsystem.core;
 import parts.lost.calculationsystem.core.exceptions.CalculationExpressionFormatException;
 import parts.lost.calculationsystem.core.exceptions.CalculationGeneratorFormattingException;
 import parts.lost.calculationsystem.core.registry.Registry;
-import parts.lost.calculationsystem.core.registry.types.ConstantItem;
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
-import parts.lost.calculationsystem.core.registry.types.OperatorItem;
-import parts.lost.calculationsystem.core.registry.types.UnaryItem;
+import parts.lost.calculationsystem.core.registry.types.ConstantTemplate;
+import parts.lost.calculationsystem.core.registry.types.GeneratorTemplate;
+import parts.lost.calculationsystem.core.registry.types.OperatorTemplate;
+import parts.lost.calculationsystem.core.registry.types.UnaryTemplate;
 import parts.lost.calculationsystem.core.types.Generator;
 import parts.lost.calculationsystem.core.types.Operator;
 import parts.lost.calculationsystem.core.types.TreeType;
@@ -112,7 +112,7 @@ public class Calculate {
 	 * @param genTrees An array of the expressions inside the generator (expressions are represented as {@link TreeType})
 	 */
 	private void genSetup(List<Flag> list, List<Flag> build, int i, List<TreeType> genTrees) {
-		GeneratorItem item = (GeneratorItem) list.get(i).getObject();
+		GeneratorTemplate item = (GeneratorTemplate) list.get(i).getObject();
 		if (item.getArgumentCount() != -1 && genTrees.size() != item.getArgumentCount())
 			cleanUpAndThrow(new CalculationGeneratorFormattingException(String.format("Incorrect number of arguments passed to generator \"%s\"", item.getIdentifier())));
 		build.add(new Flag(new Generator(genTrees.toArray(new TreeType[0]), item.getOperation())));
@@ -176,7 +176,7 @@ public class Calculate {
 				output[pos++] = flag;
 			else if (flag.isOperator()) {
 				while (!stack.isEmpty() && ((stack.peek().isOperator() &&
-						((OperatorItem) Objects.requireNonNull(stack.peek()).getObject()).getPriority().compareTo(((OperatorItem) flag.getObject()).getPriority()) >= 0) || Objects.requireNonNull(stack.peek()).isUnaryOperator())) {
+						((OperatorTemplate) Objects.requireNonNull(stack.peek()).getObject()).getPriority().compareTo(((OperatorTemplate) flag.getObject()).getPriority()) >= 0) || Objects.requireNonNull(stack.peek()).isUnaryOperator())) {
 					output[pos++] = stack.pop();
 				}
 				stack.push(flag);
@@ -208,14 +208,14 @@ public class Calculate {
 				if (flag.isNumber() || flag.isGenerator()) {
 					stack.push((TreeType) flag.getObject());
 				} else if (flag.isConstant()) {
-					stack.push(((ConstantItem) flag.getObject()).getValue());
+					stack.push(((ConstantTemplate) flag.getObject()).getValue());
 				} else if (flag.isOperator()) {
 					TreeType right = stack.pop();
 					TreeType left = stack.pop();
-					stack.push(new Operator(left, right, ((OperatorItem) flag.getObject()).getOperation()));
+					stack.push(new Operator(left, right, ((OperatorTemplate) flag.getObject()).getOperation()));
 				} else if (flag.isUnaryOperator()) {
 					TreeType one = stack.pop();
-					stack.push(new UnaryOperator(one, ((UnaryItem)flag.getObject()).getOperation()));
+					stack.push(new UnaryOperator(one, ((UnaryTemplate)flag.getObject()).getOperation()));
 				}
 			}
 

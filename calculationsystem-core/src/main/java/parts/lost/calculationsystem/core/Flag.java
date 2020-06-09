@@ -15,10 +15,10 @@
  */
 package parts.lost.calculationsystem.core;
 
-import parts.lost.calculationsystem.core.registry.types.ConstantItem;
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
-import parts.lost.calculationsystem.core.registry.types.OperatorItem;
-import parts.lost.calculationsystem.core.registry.types.UnaryItem;
+import parts.lost.calculationsystem.core.registry.types.ConstantTemplate;
+import parts.lost.calculationsystem.core.registry.types.GeneratorTemplate;
+import parts.lost.calculationsystem.core.registry.types.OperatorTemplate;
+import parts.lost.calculationsystem.core.registry.types.UnaryTemplate;
 import parts.lost.calculationsystem.core.types.Generator;
 import parts.lost.calculationsystem.core.types.Value;
 
@@ -35,11 +35,11 @@ public class Flag {
 	}
 
 	public boolean isOperator() {
-		return object instanceof OperatorItem;
+		return object instanceof OperatorTemplate;
 	}
 
 	public boolean isGeneratorItem() {
-		return object instanceof GeneratorItem;
+		return object instanceof GeneratorTemplate;
 	}
 
 	public boolean isOpenParentheses() {
@@ -59,11 +59,11 @@ public class Flag {
 	}
 
 	public boolean isConstant() {
-		return object instanceof ConstantItem;
+		return object instanceof ConstantTemplate;
 	}
 
 	public boolean isUnaryOperator() {
-		return object instanceof UnaryItem;
+		return object instanceof UnaryTemplate;
 	}
 
 	public Object getObject() {

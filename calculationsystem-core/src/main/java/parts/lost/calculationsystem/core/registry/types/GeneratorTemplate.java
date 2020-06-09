@@ -19,27 +19,33 @@ package parts.lost.calculationsystem.core.registry.types;
 // Date: 10/8/2019
 
 import parts.lost.calculationsystem.core.Priority;
-import parts.lost.calculationsystem.core.types.operations.Operation;
+import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
-public class OperatorItem extends Item {
+public class GeneratorTemplate extends Template {
 
-	private Operation operation;
+	private GenOperation operation;
+	private int argumentCount;
 
-	public OperatorItem(String identifier, Priority priority, Operation operation) {
+	public GeneratorTemplate(String identifier, int argumentCount, GenOperation operation) {
 		this.identifier = identifier;
-		this.priority = priority;
+		this.priority = Priority.ONE;
 		this.operation = operation;
+		this.argumentCount = argumentCount;
 	}
 
-	public Operation getOperation() {
+	public GenOperation getOperation() {
 		return operation;
+	}
+
+	public int getArgumentCount() {
+		return argumentCount;
 	}
 
 	@Override
 	public String toString() {
-		return "OperatorItem{" +
-
-				"identifier='" + identifier + '\'' +
+		return "GeneratorItem{" +
+				"argumentCount=" + argumentCount +
+				", identifier='" + identifier + '\'' +
 				", priority=" + priority +
 				'}';
 	}

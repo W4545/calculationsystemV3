@@ -18,8 +18,8 @@ package parts.lost.calculationsystem.core;
 import parts.lost.calculationsystem.core.exceptions.CalculationExpressionFormatException;
 import parts.lost.calculationsystem.core.exceptions.CalculationStringParsingException;
 import parts.lost.calculationsystem.core.registry.Registry;
-import parts.lost.calculationsystem.core.registry.types.Item;
-import parts.lost.calculationsystem.core.registry.types.UnaryItem;
+import parts.lost.calculationsystem.core.registry.types.Template;
+import parts.lost.calculationsystem.core.registry.types.UnaryTemplate;
 import parts.lost.calculationsystem.core.types.Value;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class RegexParser implements Parser {
 		if (pos > 0) {
 			Flag previous = groups.get(pos - 1);
 			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator() || previous.isUnaryOperator()) {
-				for (UnaryItem item : registry.getUnaryOperators()) {
+				for (UnaryTemplate item : registry.getUnaryOperators()) {
 					if (item.getIdentifier().equals(output)) {
 						groups.add(new Flag(item));
 						return;
@@ -85,16 +85,16 @@ public class RegexParser implements Parser {
 				}
 			}
 		} else if (pos == 0) {
-			for (UnaryItem item : registry.getUnaryOperators()) {
+			for (UnaryTemplate item : registry.getUnaryOperators()) {
 				if (item.getIdentifier().equals(output)) {
 					groups.add(new Flag(item));
 					return;
 				}
 			}
 		}
-		for (Item item : registry) {
-			if (item.getIdentifier().equals(output)) {
-				groups.add(new Flag(item));
+		for (Template template : registry) {
+			if (template.getIdentifier().equals(output)) {
+				groups.add(new Flag(template));
 				return;
 			}
 		}

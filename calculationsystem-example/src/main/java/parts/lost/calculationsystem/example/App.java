@@ -23,7 +23,7 @@ import parts.lost.calculationsystem.core.registry.Defaults;
 import parts.lost.calculationsystem.core.registry.Moddable;
 import parts.lost.calculationsystem.core.registry.Mode;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
-import parts.lost.calculationsystem.core.registry.types.GeneratorItem;
+import parts.lost.calculationsystem.core.registry.types.GeneratorTemplate;
 import parts.lost.calculationsystem.core.types.Value;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
@@ -38,7 +38,7 @@ public class App {
 		}
 	}
 
-	private static class MaxGeneratorItem extends GeneratorItem implements Moddable<Boolean> {
+	private static class MaxGeneratorTemplate extends GeneratorTemplate implements Moddable<Boolean> {
 
 		private Mode<Boolean> mode = null;
 
@@ -64,7 +64,7 @@ public class App {
 			return new Value(min);
 		};
 
-		public MaxGeneratorItem() {
+		public MaxGeneratorTemplate() {
 			super("max", -1, max);
 		}
 
@@ -84,7 +84,7 @@ public class App {
 
 	public static void main(String[] args) {
 		Calculate calculate = new Calculate();
-		MaxGeneratorItem maxGeneratorItem = new MaxGeneratorItem();
+		MaxGeneratorTemplate maxGeneratorItem = new MaxGeneratorTemplate();
 		calculate.getRegistry().add(maxGeneratorItem);
 		InvertMode invertMode = new InvertMode(false);
 		maxGeneratorItem.setMode(invertMode);

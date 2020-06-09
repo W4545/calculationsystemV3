@@ -19,8 +19,8 @@ import parts.lost.calculationsystem.core.types.operations.UnaryOperation;
 
 public class UnaryOperator implements TreeType {
 
-    private TreeType one;
-    private UnaryOperation operation;
+    private final TreeType one;
+    private final UnaryOperation operation;
 
     public UnaryOperator(TreeType one, UnaryOperation operation) {
         this.one = one;

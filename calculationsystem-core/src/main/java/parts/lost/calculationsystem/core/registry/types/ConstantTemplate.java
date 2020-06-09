@@ -19,37 +19,19 @@ package parts.lost.calculationsystem.core.registry.types;
 // Date: 10/8/2019
 
 import parts.lost.calculationsystem.core.Priority;
-import parts.lost.calculationsystem.core.types.operations.UnaryOperation;
+import parts.lost.calculationsystem.core.types.Value;
 
-public class UnaryItem extends Item {
+public class ConstantTemplate extends Template {
 
-	private UnaryOperation operation;
+	private Value value;
 
-	public UnaryItem(String identifier, Priority priority, UnaryOperation operation) {
+	public ConstantTemplate(String identifier, Value value) {
 		this.identifier = identifier;
-		this.priority = priority;
-		this.operation = operation;
+		this.priority = Priority.ONE;
+		this.value = value;
 	}
 
-	public UnaryOperation getOperation() {
-		return operation;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof UnaryItem)) return false;
-
-		UnaryItem unaryItem = (UnaryItem) o;
-
-		if (!identifier.equals(unaryItem.identifier)) return false;
-		return priority == unaryItem.priority;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = identifier.hashCode();
-		result = 31 * result + priority.hashCode();
-		return result;
+	public Value getValue() {
+		return value;
 	}
 }

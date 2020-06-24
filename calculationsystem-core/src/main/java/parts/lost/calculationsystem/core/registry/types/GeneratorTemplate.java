@@ -18,17 +18,19 @@ package parts.lost.calculationsystem.core.registry.types;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calculationsystem.core.Flag;
 import parts.lost.calculationsystem.core.Priority;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
+import java.util.Objects;
+
 public class GeneratorTemplate extends Template {
 
-	private GenOperation operation;
-	private int argumentCount;
+	private final GenOperation operation;
+	private final int argumentCount;
 
 	public GeneratorTemplate(String identifier, int argumentCount, GenOperation operation) {
-		this.identifier = identifier;
-		this.priority = Priority.ONE;
+		super(identifier, Priority.ONE);
 		this.operation = operation;
 		this.argumentCount = argumentCount;
 	}
@@ -39,6 +41,26 @@ public class GeneratorTemplate extends Template {
 
 	public int getArgumentCount() {
 		return argumentCount;
+	}
+
+	@Override
+	public Flag generateFlag() {
+		return new Flag(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		GeneratorTemplate that = (GeneratorTemplate) o;
+		return argumentCount == that.argumentCount &&
+				operation.equals(that.operation);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), operation, argumentCount);
 	}
 
 	@Override

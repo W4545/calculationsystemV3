@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+}
+
+version '0.5.0'
+ext.moduleName = 'parts.lost.calculationsystem.variables'
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation project(':calculationsystem-core')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'CalculationSystem-Variables'
+                description = 'An extension library for CalculationSystem-Core, adding support for variables allowing' +
+                        'an expression to be parsed once and evaluated many times efficently.'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'jacky'
+                        name = 'Jack Young'
+                        email = 'jackyoung@lost.parts'
+                    }
+                }
+            }
+        }
+    }
+}

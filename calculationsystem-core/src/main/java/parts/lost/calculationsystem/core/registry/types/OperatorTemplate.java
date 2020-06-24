@@ -18,21 +18,42 @@ package parts.lost.calculationsystem.core.registry.types;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calculationsystem.core.Flag;
 import parts.lost.calculationsystem.core.Priority;
 import parts.lost.calculationsystem.core.types.operations.Operation;
 
+import java.util.Objects;
+
 public class OperatorTemplate extends Template {
 
-	private Operation operation;
+	private final Operation operation;
 
 	public OperatorTemplate(String identifier, Priority priority, Operation operation) {
-		this.identifier = identifier;
-		this.priority = priority;
+		super(identifier, priority);
 		this.operation = operation;
 	}
 
 	public Operation getOperation() {
 		return operation;
+	}
+
+	@Override
+	public Flag generateFlag() {
+		return new Flag(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		OperatorTemplate that = (OperatorTemplate) o;
+		return operation.equals(that.operation);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), operation);
 	}
 
 	@Override

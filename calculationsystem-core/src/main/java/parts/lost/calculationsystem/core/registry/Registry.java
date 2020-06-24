@@ -28,9 +28,7 @@ import java.util.function.Consumer;
  */
 public class Registry implements Iterable<Template> {
 
-	private Set<OperatorTemplate> operators;
-	private Set<GeneratorTemplate> generators;
-	private Set<ConstantTemplate> constants;
+	private Set<Template> templates;
 	private Set<UnaryTemplate> unaryOperators;
 
 	public Registry() {
@@ -45,9 +43,7 @@ public class Registry implements Iterable<Template> {
 	}
 
 	private void init() {
-		operators = new HashSet<>(8);
-		generators = new HashSet<>(8);
-		constants = new HashSet<>(4);
+		templates = new HashSet<>(12);
 		unaryOperators = new HashSet<>(2);
 	}
 
@@ -55,32 +51,16 @@ public class Registry implements Iterable<Template> {
 		Defaults.load_defaults(this);
 	}
 
-	public boolean add(OperatorTemplate item) {
-		return operators.add(item);
-	}
-
-	public boolean add(GeneratorTemplate item) {
-		return generators.add(item);
-	}
-
 	public boolean add(UnaryTemplate item) {
 		return unaryOperators.add(item);
 	}
 
-	public boolean add(ConstantTemplate item) {
-		return constants.add(item);
+	public boolean add(Template item) {
+		return templates.add(item);
 	}
 
-	public Set<OperatorTemplate> getOperators() {
-		return operators;
-	}
-
-	public Set<GeneratorTemplate> getGenerators() {
-		return generators;
-	}
-
-	public Set<ConstantTemplate> getConstants() {
-		return constants;
+	public Set<Template> getTemplates() {
+		return templates;
 	}
 
 	public Set<UnaryTemplate> getUnaryOperators() {
@@ -88,20 +68,17 @@ public class Registry implements Iterable<Template> {
 	}
 
 	public boolean contains(Template template) {
-		return operators.contains(template) || generators.contains(template) ||
-				constants.contains(template) || unaryOperators.contains(template);
+		return templates.contains(template) || unaryOperators.contains(template);
 	}
 
 	@Override
 	public Iterator<Template> iterator() {
 		return new Iterator<>() {
 			@SuppressWarnings("unchecked")
-			private Iterator<? extends Template>[] iterators = new Iterator[4];
+			private final Iterator<? extends Template>[] iterators = new Iterator[2];
 			{
-				iterators[0] = operators.iterator();
-				iterators[1] = generators.iterator();
-				iterators[2] = constants.iterator();
-				iterators[3] = unaryOperators.iterator();
+				iterators[0] = templates.iterator();
+				iterators[1] = unaryOperators.iterator();
 			}
 
 			private int current = 0;
@@ -126,12 +103,8 @@ public class Registry implements Iterable<Template> {
 
 	@Override
 	public void forEach(Consumer<? super Template> action) {
-		for (OperatorTemplate item : operators)
-			action.accept(item);
-		for (GeneratorTemplate item : generators)
-			action.accept(item);
-		for (ConstantTemplate item : constants)
-			action.accept(item);
+		for (Template template : templates)
+			action.accept(template);
 		for (UnaryTemplate item : unaryOperators)
 			action.accept(item);
 	}

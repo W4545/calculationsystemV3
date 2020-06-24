@@ -23,8 +23,8 @@ import parts.lost.calculationsystem.core.types.operations.GenOperation;
 
 public class RDGeneratorTemplate extends GeneratorTemplate implements Moddable<RD> {
 
-    private GenOperation radians;
-    private GenOperation degrees;
+    private final GenOperation radians;
+    private final GenOperation degrees;
 
     private Mode<RD> mode = null;
 

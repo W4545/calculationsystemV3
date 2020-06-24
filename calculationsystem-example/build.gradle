@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation project(':calculationsystem-core')
+    implementation project(':calculationsystem-variables')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

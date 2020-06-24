@@ -18,20 +18,42 @@ package parts.lost.calculationsystem.core.registry.types;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calculationsystem.core.Flag;
 import parts.lost.calculationsystem.core.Priority;
 import parts.lost.calculationsystem.core.types.Value;
+import parts.lost.calculationsystem.core.types.Constant;
+
+import java.util.Objects;
 
 public class ConstantTemplate extends Template {
 
-	private Value value;
+	private final Constant constant;
 
 	public ConstantTemplate(String identifier, Value value) {
-		this.identifier = identifier;
-		this.priority = Priority.ONE;
-		this.value = value;
+		super(identifier, Priority.ONE);
+		this.constant = new Constant(value);
 	}
 
-	public Value getValue() {
-		return value;
+	public Constant getConstant() {
+		return constant;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		ConstantTemplate that = (ConstantTemplate) o;
+		return getConstant().equals(that.getConstant());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), getConstant());
+	}
+
+	@Override
+	public Flag generateFlag() {
+		return new Flag(this);
 	}
 }

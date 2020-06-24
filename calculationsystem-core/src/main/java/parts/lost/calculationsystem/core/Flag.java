@@ -24,7 +24,7 @@ import parts.lost.calculationsystem.core.types.Value;
 
 public class Flag {
 
-	private Object object;
+	private final Object object;
 
 	public Flag(Object object) {
 		this.object = object;
@@ -66,8 +66,9 @@ public class Flag {
 		return object instanceof UnaryTemplate;
 	}
 
-	public Object getObject() {
-		return object;
+	@SuppressWarnings("unchecked")
+	public <T> T getObject() {
+		return (T) object;
 	}
 
 	@Override

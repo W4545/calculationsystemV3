@@ -25,4 +25,10 @@ module parts.lost.calculationsystem.core {
 	exports parts.lost.calculationsystem.core.types.operations;
 	exports parts.lost.calculationsystem.core.registry.defaults.modes;
 	exports parts.lost.calculationsystem.core.registry.defaults.modes.enums;
+	exports parts.lost.calculationsystem.core.extensions.builder.defaults;
+	exports parts.lost.calculationsystem.core.extensions.builder;
+	exports parts.lost.calculationsystem.core.extensions.yield;
+	exports parts.lost.calculationsystem.core.extensions.yield.defaults;
+    exports parts.lost.calculationsystem.core.extensions.infix;
+    exports parts.lost.calculationsystem.core.extensions.infix.defaults;
 }

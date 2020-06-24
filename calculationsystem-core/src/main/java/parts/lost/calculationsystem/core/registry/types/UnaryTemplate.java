@@ -18,21 +18,26 @@ package parts.lost.calculationsystem.core.registry.types;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calculationsystem.core.Flag;
 import parts.lost.calculationsystem.core.Priority;
 import parts.lost.calculationsystem.core.types.operations.UnaryOperation;
 
 public class UnaryTemplate extends Template {
 
-	private UnaryOperation operation;
+	private final UnaryOperation operation;
 
 	public UnaryTemplate(String identifier, Priority priority, UnaryOperation operation) {
-		this.identifier = identifier;
-		this.priority = priority;
+		super(identifier, priority);
 		this.operation = operation;
 	}
 
 	public UnaryOperation getOperation() {
 		return operation;
+	}
+
+	@Override
+	public Flag generateFlag() {
+		return new Flag(this);
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 rootProject.name = 'calculationsystem'
 include 'calculationsystem-core'
 include 'calculationsystem-example'
+include 'calculationsystem-variables'
 

@@ -15,4 +15,5 @@
  */
 module parts.lost.calculationsystem.example {
 	requires parts.lost.calculationsystem.core;
+	requires parts.lost.calculationsystem.variables;
 }

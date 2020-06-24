@@ -20,7 +20,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             pom {
-                name = 'CalculationSystem'
+                name = 'CalculationSystem-Core'
                 description = 'A library that converts strings to an expression that can be evaluated'
 
                 licenses {

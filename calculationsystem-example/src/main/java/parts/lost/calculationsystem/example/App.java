@@ -23,9 +23,16 @@ import parts.lost.calculationsystem.core.registry.Defaults;
 import parts.lost.calculationsystem.core.registry.Moddable;
 import parts.lost.calculationsystem.core.registry.Mode;
 import parts.lost.calculationsystem.core.registry.defaults.modes.enums.RD;
+import parts.lost.calculationsystem.core.registry.types.ConstantTemplate;
 import parts.lost.calculationsystem.core.registry.types.GeneratorTemplate;
 import parts.lost.calculationsystem.core.types.Value;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
+import parts.lost.calculationsystem.variables.VariableCalculation;
+import parts.lost.calculationsystem.variables.Variables;
+import parts.lost.calculationsystem.variables.extensions.builder.VariableBuilderExtension;
+import parts.lost.calculationsystem.variables.extensions.infix.VariableInfixExtension;
+import parts.lost.calculationsystem.variables.extensions.yield.VariableYield;
+import parts.lost.calculationsystem.variables.registry.types.VariableTemplate;
 
 import java.util.Scanner;
 
@@ -89,11 +96,19 @@ public class App {
 		InvertMode invertMode = new InvertMode(false);
 		maxGeneratorItem.setMode(invertMode);
 
+		Variables.quickSetup(calculate);
+		Variables.addVariable(calculate, new VariableTemplate("x", new Value(3d)));
+
+		VariableCalculation calculation = calculate.interpolate("3*x");
+		System.out.println(calculation.solve());
+		calculation.setVariable("x", 3);
+		System.out.println(calculation.solve());
+
 		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
 		//System.out.println(calculate.calculate("max(1, max(5, 7) + 1)"));
 
 		Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
-
+		calculate.interpolate("4+(55/5");
 		calculate.interpolate("max(55+5*4, 44, 20, 2*5) + 5");
 		calculate.interpolate("4 * sin(4)");
 		calculate.interpolate("45*5");
@@ -101,24 +116,27 @@ public class App {
 		System.out.println(	calculate.calculate("-5+-4*max(-4--3, -2)"));
 		Scanner scanner = new Scanner(System.in);
 
-		label:
 		while (true) {
 			try {
 				System.out.print("Enter equation (Enter q to quit): ");
 				String line = scanner.nextLine();
 
-				switch (line.toLowerCase()) {
-					case "q":
-						break label;
-					case "$radians":
-						Defaults.RADIANS_DEGREES_MODE.setState(RD.RADIANS);
-						continue;
-					case "$degrees":
-						Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
-						continue;
-					case "$invert":
-						invertMode.setState(!invertMode.getCurrentState());
-						continue;
+				if (line.toLowerCase().equals("q")) {
+					break;
+				} else if (line.toLowerCase().contains("$radians")) {
+					Defaults.RADIANS_DEGREES_MODE.setState(RD.RADIANS);
+					continue;
+				} else if (line.toLowerCase().contains("$degrees")) {
+					Defaults.RADIANS_DEGREES_MODE.setState(RD.DEGREES);
+					continue;
+				} else if (line.toLowerCase().contains("$invert")) {
+					invertMode.setState(!invertMode.getCurrentState());
+					continue;
+				} else if (line.toLowerCase().contains("$define")) {
+					String[] strings = line.split(" ");
+					System.out.println("Defining variable \"" + strings[1] + "\": " + strings[2]);
+					calculate.getRegistry().add(new ConstantTemplate(strings[1], new Value(Double.parseDouble(strings[2]))));
+					continue;
 				}
 
 				long time = System.nanoTime();

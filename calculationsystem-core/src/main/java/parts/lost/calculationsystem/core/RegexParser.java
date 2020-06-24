@@ -32,14 +32,72 @@ public class RegexParser implements Parser {
 	// private String oldreg2 = "(\\d+(?:[.]\\d*)?)|([.]\\d+)|([*+\\-/%^(),])|([^\\d()*+\\-/%^,]+)";
 
 	private Pattern pattern;
+	private Registry registry;
+	private boolean assumeParentheses;
 
 	public RegexParser() {
 		pattern = Pattern.compile("(\\d+(?:[.]\\d*)?|[.]\\d+)|([*+\\-/%^])|([(),])|([^\\d()*+\\-/%^,.\\s]+)");
-
+		registry = new Registry();
+		assumeParentheses = true;
 	}
 
-	public List<Flag> parse(String string, Registry registry, State state) {
-		var matcher = pattern.matcher(string);
+	public RegexParser(Registry registry) {
+		this.registry = registry;
+	}
+
+	public RegexParser(boolean assumeParentheses) {
+		pattern = Pattern.compile("(\\d+(?:[.]\\d*)?|[.]\\d+)|([*+\\-/%^])|([(),])|([^\\d()*+\\-/%^,.\\s]+)");
+		this.assumeParentheses = assumeParentheses;
+	}
+
+	public RegexParser(Registry registry, boolean assumeParentheses) {
+		this.registry = registry;
+		this.assumeParentheses = assumeParentheses;
+	}
+
+	public boolean assumeParentheses() {
+		return assumeParentheses;
+	}
+
+	public void assumeParentheses(boolean assumeParentheses) {
+		this.assumeParentheses = assumeParentheses;
+	}
+
+	@Override
+	public Registry getRegistry() {
+		return registry;
+	}
+
+	/**
+	 * Returns the count of opening and closing parentheses in that order
+	 * @param expression The String expression
+	 * @return An array with two integers
+	 */
+	protected int[] parenthesesCount(String expression) {
+		int[] parenthesesCount = new int[2];
+
+		for (int i = 0; i < expression.length(); i += 1) {
+			char character = expression.charAt(i);
+			if (character == '(')
+				parenthesesCount[0] += 1;
+			else if (character == ')')
+				parenthesesCount[1] += 1;
+		}
+
+		return parenthesesCount;
+	}
+
+	public List<Flag> parse(State state) {
+		if (assumeParentheses) {
+			int[] parenthesesCount = parenthesesCount(state.getExpression());
+
+			if (parenthesesCount[0] < parenthesesCount[1])
+				throw new CalculationStringParsingException(state, "Cannot assume opening parentheses");
+			else if (parenthesesCount[0] > parenthesesCount[1])
+				state.setExpression(state.getExpression().concat(")".repeat(parenthesesCount[0] - parenthesesCount[1])));
+		}
+
+		var matcher = pattern.matcher(state.getExpression());
 
 		List<Flag> groups = new ArrayList<>();
 		int pos = 0;
@@ -78,23 +136,23 @@ public class RegexParser implements Parser {
 			Flag previous = groups.get(pos - 1);
 			if (previous.isOpenParentheses() || previous.isComma() || previous.isOperator() || previous.isUnaryOperator()) {
 				for (UnaryTemplate item : registry.getUnaryOperators()) {
-					if (item.getIdentifier().equals(output)) {
-						groups.add(new Flag(item));
+					if (item.matches(output)) {
+						groups.add(item.generateFlag());
 						return;
 					}
 				}
 			}
 		} else if (pos == 0) {
 			for (UnaryTemplate item : registry.getUnaryOperators()) {
-				if (item.getIdentifier().equals(output)) {
-					groups.add(new Flag(item));
+				if (item.matches(output)) {
+					groups.add(item.generateFlag());
 					return;
 				}
 			}
 		}
 		for (Template template : registry) {
-			if (template.getIdentifier().equals(output)) {
-				groups.add(new Flag(template));
+			if (template.matches(output)) {
+				groups.add(template.generateFlag());
 				return;
 			}
 		}

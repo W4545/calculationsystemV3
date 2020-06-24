@@ -23,11 +23,11 @@ import parts.lost.calculationsystem.core.types.TreeType;
 
 public class Calculation {
 
-	private final TreeType tree;
-	private final String representation;
-	private Value value;
+	protected final TreeType tree;
+	protected final String representation;
+	protected Value value;
 
-	Calculation(String representation, TreeType tree) {
+	public Calculation(String representation, TreeType tree) {
 		this.representation = representation;
 		this.tree = tree;
 		this.value = null;
@@ -35,6 +35,10 @@ public class Calculation {
 
 	public String getCalculation() {
 		return representation;
+	}
+
+	public TreeType getTree() {
+		return tree;
 	}
 
 	public Value solve() {

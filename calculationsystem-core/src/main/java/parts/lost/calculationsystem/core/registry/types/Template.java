@@ -18,14 +18,16 @@ package parts.lost.calculationsystem.core.registry.types;
 // Name: Jack Young
 // Date: 10/8/2019
 
+import parts.lost.calculationsystem.core.Flag;
 import parts.lost.calculationsystem.core.Priority;
 
 public abstract class Template {
 	protected String identifier;
 	protected Priority priority;
 
-	protected Template() {
-
+	protected Template(String identifier, Priority priority) {
+		this.identifier = identifier;
+		this.priority = priority;
 	}
 
 	public String getIdentifier() {
@@ -52,5 +54,11 @@ public abstract class Template {
 		int result = identifier.hashCode();
 		result = 31 * result + priority.hashCode();
 		return result;
+	}
+
+	public abstract Flag generateFlag();
+
+	public boolean matches(String string) {
+		return string.equals(identifier);
 	}
 }

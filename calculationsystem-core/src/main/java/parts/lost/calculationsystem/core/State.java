@@ -15,8 +15,16 @@
  */
 package parts.lost.calculationsystem.core;
 
+import parts.lost.calculationsystem.core.types.TreeType;
+
+import java.util.*;
+
 public class State {
+
 	private String expression;
+	private TreeType treeType;
+	private final Set<CalculationManager> calculationManagerSet = new HashSet<>();
+	private final Map<String, Object> storage = new HashMap<>();
 
 	public State(String expression) {
 		this.expression = expression;
@@ -28,5 +36,37 @@ public class State {
 
 	public void setExpression(String expression) {
 		this.expression = expression;
+	}
+
+	public TreeType getTreeType() {
+		return treeType;
+	}
+
+	public void setTreeType(TreeType treeType) {
+		this.treeType = treeType;
+	}
+
+	public boolean addManager(CalculationManager calculationManager) {
+		return calculationManagerSet.add(calculationManager);
+	}
+
+	public Set<CalculationManager> getCalculationManagers() {
+		return calculationManagerSet;
+	}
+
+	public Map<String, Object> getStorage() {
+		return storage;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getStorage(String key) {
+		return (T) storage.get(key);
+	}
+
+	public void setStorage(String key, Object data) {
+		if (data == null)
+			storage.remove(key);
+		else
+			storage.put(key, data);
 	}
 }

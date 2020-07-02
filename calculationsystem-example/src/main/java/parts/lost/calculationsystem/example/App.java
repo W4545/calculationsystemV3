@@ -29,9 +29,6 @@ import parts.lost.calculationsystem.core.types.Value;
 import parts.lost.calculationsystem.core.types.operations.GenOperation;
 import parts.lost.calculationsystem.variables.VariableCalculation;
 import parts.lost.calculationsystem.variables.Variables;
-import parts.lost.calculationsystem.variables.extensions.builder.VariableBuilderExtension;
-import parts.lost.calculationsystem.variables.extensions.infix.VariableInfixExtension;
-import parts.lost.calculationsystem.variables.extensions.yield.VariableYield;
 import parts.lost.calculationsystem.variables.registry.types.VariableTemplate;
 
 import java.util.Scanner;
@@ -99,9 +96,11 @@ public class App {
 		Variables.quickSetup(calculate);
 		Variables.addVariable(calculate, new VariableTemplate("x", new Value(3d)));
 
-		VariableCalculation calculation = calculate.interpolate("3*x");
+		VariableCalculation calculation = calculate.interpolate("x*x");
 		System.out.println(calculation.solve());
-		calculation.setVariable("x", 3);
+		calculation.setVariable("x", 6);
+		System.out.println(calculation.solve());
+		calculation.setVariable("x", 9);
 		System.out.println(calculation.solve());
 
 		//System.out.println(calculate.calculate("max(55+5*4, 44, 20, 2*5) + 5"));
